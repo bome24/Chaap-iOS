@@ -21,4 +21,4 @@ struct CHBlurView: UIViewRepresentable {
 
 
 // 사용방법
-// .background(BlurView(style: .systemUltraThinMaterial))
+// .background(CHBlurView(style: .systemUltraThinMaterial))
