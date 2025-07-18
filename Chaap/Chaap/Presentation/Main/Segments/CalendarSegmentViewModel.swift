@@ -29,7 +29,7 @@ class CalendarSegmentViewModel: ObservableObject {
     
     /// 한국식 월요일 시작 요일
     var weekdays: [String] {
-        return ["월", "화", "수", "목", "금", "토", "일"]
+        return ["월", "화", "수", "목", "금", "토", "일",]
     }
     
 
@@ -118,7 +118,7 @@ class CalendarSegmentViewModel: ObservableObject {
     // MARK: - Public Methods
     
     /// 월 변경 (이전/다음)
-    func changeMonth(_ direction: Int) {
+    func monthDidChange(_ direction: Int) {
         guard canNavigateMonth(direction) else { return }
         
         if let newMonth = calendar.date(
@@ -133,7 +133,7 @@ class CalendarSegmentViewModel: ObservableObject {
     }
     
     /// 날짜 선택
-    func selectDate(_ date: Date) {
+    func dateWasSelected(_ date: Date) {
         DispatchQueue.main.async {
             self.selectedDate = date
         }
@@ -164,7 +164,7 @@ class CalendarSegmentViewModel: ObservableObject {
         }
         
         if isToday {
-            return Color(hex: "#1C3E98")
+            return .chPrimary
         }
         
         if hasEvents(on: date) {
@@ -212,12 +212,24 @@ class CalendarSegmentViewModel: ObservableObject {
         let currentMonthNumber = calendar.component(.month, from: Date())
         
         if currentYear < startYear {
-            self.currentMonth = createDate(year: startYear, month: 1, day: 1) ?? Date()
+            self.currentMonth = createDate(
+                year: startYear,
+                month: 1,
+                day: 1
+            ) ?? Date()
         } else if currentYear > endYear {
-            self.currentMonth = createDate(year: endYear, month: 12, day: 1) ?? Date()
+            self.currentMonth = createDate(
+                year: endYear,
+                month: 12,
+                day: 1
+            ) ?? Date()
         } else {
             // 현재 년도가 범위 내에 있을 때는 현재 월을 사용
-            self.currentMonth = createDate(year: currentYear, month: currentMonthNumber, day: 1) ?? Date()
+            self.currentMonth = createDate(
+                year: currentYear,
+                month: currentMonthNumber,
+                day: 1
+            ) ?? Date()
         }
     }
     
