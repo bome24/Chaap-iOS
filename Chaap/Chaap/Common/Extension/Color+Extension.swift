@@ -45,7 +45,7 @@ extension Color {
     }
     
     /// 16진수 색상코드 가져와서 커스텀 컬러 지정
-    /// 키 컬러가 확정되지 않아서 임의로 설정해두었음.
-    static let chPrimary = Color(hex: "#1B3987")
-    static let chSecondary = Color(hex: "#8693D999").opacity(0.6)
+    static let chPrimary = Color(hex: "#1C3E98") // Primary Color
+    static let chSecondary = Color(hex: "#9EA9E1") // Secondary Color
+    static let chBlack = Color(hex: "#020202")
 }
