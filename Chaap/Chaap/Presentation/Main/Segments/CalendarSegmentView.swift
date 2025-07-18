@@ -173,7 +173,7 @@ struct CalendarSegmentView: View {
             }
         }
         .padding(.top, 6)
-        .frame(height: 60)
+        .frame(maxHeight: 150)
     }
     
     private func eventRow(event: CalendarEvent) -> some View {
