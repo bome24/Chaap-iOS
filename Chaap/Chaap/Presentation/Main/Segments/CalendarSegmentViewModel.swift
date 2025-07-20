@@ -32,8 +32,6 @@ class CalendarSegmentViewModel: ObservableObject {
         return ["월", "화", "수", "목", "금", "토", "일",]
     }
     
-
-    
     /// 현재 월의 날짜 배열
     var daysInMonth: [Date] {
         guard let monthInterval = calendar.dateInterval(
@@ -117,13 +115,28 @@ class CalendarSegmentViewModel: ObservableObject {
     
     // MARK: - Public Methods
     
-    /// 월 변경 (이전/다음)
-    func monthDidChange(_ direction: Int) {
-        guard canNavigateMonth(direction) else { return }
+    /// 다음 월로 이동
+    func didTapNextMonth() {
+        guard canNavigateMonth(1) else { return }
         
         if let newMonth = calendar.date(
             byAdding: .month,
-            value: direction,
+            value: 1,
+            to: currentMonth
+        ) {
+            DispatchQueue.main.async {
+                self.currentMonth = newMonth
+            }
+        }
+    }
+    
+    /// 이전 월로 이동
+    func didTapPreviousMonth() {
+        guard canNavigateMonth(-1) else { return }
+        
+        if let newMonth = calendar.date(
+            byAdding: .month,
+            value: -1,
             to: currentMonth
         ) {
             DispatchQueue.main.async {
@@ -138,10 +151,6 @@ class CalendarSegmentViewModel: ObservableObject {
             self.selectedDate = date
         }
     }
-    
-
-    
-
     
     /// 특정 날짜에 이벤트가 있는지 확인
     func hasEvents(on date: Date) -> Bool {

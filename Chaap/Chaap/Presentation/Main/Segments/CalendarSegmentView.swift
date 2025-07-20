@@ -46,7 +46,7 @@ struct CalendarSegmentView: View {
 
             HStack(spacing: 0) {
                 Button {
-                    viewModel.monthDidChange(-1)
+                    viewModel.didTapPreviousMonth()
                 } label: {
                     Image(systemName: "chevron.left")
                         .foregroundColor(Color(hex: "#919191"))
@@ -63,7 +63,7 @@ struct CalendarSegmentView: View {
                 Spacer()
 
                 Button {
-                    viewModel.monthDidChange(1)
+                    viewModel.didTapNextMonth()
                 } label: {
                     Image(systemName: "chevron.right")
                         .foregroundColor(Color(hex: "#919191"))
