@@ -1,5 +1,5 @@
 //
-//  ProfileView.swift
+//  EditProfileView.swift
 //  Chaap
 //
 //  Created by BoMin Lee on 7/17/25.
@@ -7,8 +7,10 @@
 
 import SwiftUI
 
-struct ProfileView: View {
-    @State private var nickname = ""
+struct EditProfileView: View {
+    @State private var nickname = "Minbol"
+    @State private var originalNickname = "Minbol"
+    @State private var hasUserEdited = false
     
     /// 바이트 수 계산 함수
     private func getByteCount(of text: String) -> Int {
@@ -29,29 +31,30 @@ struct ProfileView: View {
         return newValue
     }
     
+    /// 변경사항 여부 체크
+    private var hasChanges: Bool {
+        return nickname != originalNickname
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             /// 상단 네비게이션
             VStack(alignment: .leading, spacing: 0) {
                 ZStack {
                     /// 중앙 타이틀
-                    Text("Chaap")
-                        .font(
-                            Font.custom("SF Pro", size: 17)
-                                .weight(.semibold)
-                        )
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(Color(red: 0.13, green: 0.13, blue: 0.13))
+                    Text("프로필 수정")
+                        .font(.chPrimaryCaptionMedium)
+                        .foregroundColor(.black)
                     
                     /// 오른쪽 버튼
                     HStack {
                         Spacer()
-                        Button("다음") {
-                            // 다음 버튼 액션
+                        Button("저장") {
+                            // 저장 버튼 액션
                         }
                         .font(.chPrimaryCaptionMedium)
-                        // Secondary-Black : Primary-Black
-                        .foregroundColor(nickname.isEmpty ? .gray : .black)
+                        // Primary-Black : Secondary-Black
+                        .foregroundColor(hasChanges ? .black : .gray)
                     }
                 }
             }
@@ -94,19 +97,17 @@ struct ProfileView: View {
                             .background(.black.opacity(0.05))
                             .cornerRadius(100)
                         
-                        if nickname.isEmpty {
-                            Text("닉네임을 입력해주세요.")
-                                .font(.chPrimaryCaptionMedium)
-                                // MiscellaneousTabUnselected 색상 대체
-                                .foregroundColor(Color(red: 0.6, green: 0.6, blue: 0.6))
-                                .padding(.leading, 20)
-                        }
-                        
                         TextField("", text: $nickname)
                             .font(.chPrimaryCaptionRegular)
-                            .foregroundColor(.black) // Primary-Black
+                            // 수정 시작하면 Primary-Black, 아니면 회색
+                            .foregroundColor(
+                                hasUserEdited ? .black : Color(red: 0.6, green: 0.6, blue: 0.6)
+                            )
                             .padding(.horizontal, 20)
                             .onChange(of: nickname) { newValue in
+                                if !hasUserEdited {
+                                    hasUserEdited = true
+                                }
                                 nickname = validateInput(newValue)
                             }
                     }
@@ -121,5 +122,5 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView()
-}
+    EditProfileView()
+} 
