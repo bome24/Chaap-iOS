@@ -46,8 +46,10 @@ struct CHBottomModalModifier<SheetContent: View>: ViewModifier {
                             .padding()
                     }
                     .frame(width: geometry.size.width, height: defaultHeight - dragOffset)
-                    // TODO: 배경 Glass Morphism 적용해야 함.
-                    .background(Color.red.opacity(0.3))
+                    .background(
+                        CHBlurView(style: .systemUltraThinMaterialDark)
+                            .clipShape(RoundedRectangle(cornerRadius: 32)))
+                    .overlay(GradientStroke())
                     .cornerRadius(36)
                     .shadow(radius: 10)
                     .offset(y: dragOffset)
