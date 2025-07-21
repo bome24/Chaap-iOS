@@ -26,8 +26,6 @@ struct CalendarSegmentView: View {
                         weekdayHeader
                         calendarGrid
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 0)
                     .frame(maxWidth: .infinity, alignment: .topLeading)
 
                     eventsList
@@ -79,15 +77,16 @@ struct CalendarSegmentView: View {
     }
     
     private var weekdayHeader: some View {
-        HStack(alignment: .center, spacing: 10) {
+        HStack(alignment: .center) {
             ForEach(viewModel.weekdays, id: \.self) { weekday in
+                Spacer()
                 Text(weekday)
                     .font(.chPrimaryCaptionRegular)
                     .foregroundColor(Color(hex: "#919191"))
-                    .frame(maxWidth: .infinity, alignment: .center)
+                Spacer()
             }
         }
-        .padding(10)
+        .padding(.horizontal, 16)
         .frame(
             maxWidth: .infinity,
             minHeight: 36,
@@ -99,17 +98,19 @@ struct CalendarSegmentView: View {
     private var calendarGrid: some View {
         VStack(alignment: .center, spacing: 5) {
             ForEach(0..<6, id: \.self) { week in
-                HStack(alignment: .center, spacing: 10) {
+                HStack(alignment: .center) {
                     ForEach(0..<7, id: \.self) { day in
+                        Spacer()
                         let index = week * 7 + day
                         if index < viewModel.daysInMonth.count {
                             dayCell(date: viewModel.daysInMonth[index])
                         } else {
                             Spacer()
                         }
+                        Spacer()
                     }
                 }
-                .padding(10)
+                .padding(.horizontal, 16)
                 .frame(
                     maxWidth: .infinity,
                     minHeight: 36,
