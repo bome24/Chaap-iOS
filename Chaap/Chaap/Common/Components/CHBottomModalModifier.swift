@@ -24,12 +24,6 @@ struct CHBottomModalModifier<SheetContent: View>: ViewModifier {
                         }
                     }
                 if isPresented {
-                    // MARK: 모달 아래 배경에 dim 효과 주는 코드인데, 쓰이지 않는 것 같아 우선 주석 처리
-//                    Color.black.opacity(0.3)
-//                        .ignoresSafeArea()
-//                        .onTapGesture {
-//                            withAnimation { isPresented = false }
-//                        }
                     sheetView()
                         .transition(.move(edge: .bottom))
                         .animation(.easeInOut, value: isPresented)
