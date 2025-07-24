@@ -16,7 +16,7 @@ struct GradientStroke: View {
                     LinearGradient(
                         gradient: Gradient(colors: [
                             Color.white.opacity(0),
-                            Color.white.opacity(0.6)
+                            Color.white.opacity(0.6 * 0.2)
                         ]),
                         startPoint: .center,
                         endPoint: .bottomTrailing
@@ -26,21 +26,24 @@ struct GradientStroke: View {
                 .stroke(
                     LinearGradient(
                         gradient: Gradient(colors: [
-                            Color(hex: "#EEEEEE").opacity(0.8),
+                            Color(hex: "#EEEEEE").opacity(0.8 * 0.2),
                             Color(hex: "#EEEEEE").opacity(0)
                         ]),
                         startPoint: .leading,
                         endPoint: .trailing
-                    )
+                    ),
+                    lineWidth: 0.92
                 )
                 .stroke(
                     LinearGradient(
                         gradient: Gradient(colors: [
-                            Color.white.opacity(0.6),
-                            Color.white.opacity(0.1)
+                            Color.white.opacity(0.6 * 0.5),
+                            Color.white.opacity(0.1 * 0.5)
                         ]),
                         startPoint: .topLeading,
-                        endPoint: .center)
+                        endPoint: .center
+                    ),
+                    lineWidth: 0.92
                 )
         }
     }
