@@ -9,7 +9,24 @@ import SwiftUI
 
 struct CardSegmentView: View {
     var body: some View {
-        Text("카드 세그먼트 뷰입니다.")
+        ZStack {
+            Rectangle()
+                .foregroundColor(.clear)
+                .background(.black.opacity(0.05))
+                .background(
+                    EllipticalGradient(
+                        colors: [Color.chPrimary, Color.chSecondary],
+                        center: .topLeading,
+                        startRadiusFraction: 0.2,
+                        endRadiusFraction: 1.0
+                    )
+                    .scaleEffect(x: 1.6, y: 1.0, anchor: .topLeading)
+                )
+                .ignoresSafeArea(.all)
+            
+            CHCardShow()
+                .frame(width: 319, height: 389)
+        }
     }
 }
 

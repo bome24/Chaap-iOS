@@ -4,8 +4,6 @@
 //
 //  Created by Enoch on 7/18/25.
 //
-
-import Foundation
 import SwiftUI
 
 struct CHBlurView: UIViewRepresentable {
@@ -18,7 +16,3 @@ struct CHBlurView: UIViewRepresentable {
     
     func updateUIView(_ uiView: UIViewType, context: Context) { }
 }
-
-
-// 사용방법
-// .background(CHBlurView(style: .systemUltraThinMaterial))
