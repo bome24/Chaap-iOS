@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// Person model for mock data
+// TODO: 실제 데이터로 변경해야 함
 struct Person: Identifiable {
     let id = UUID()
     let name: String
@@ -17,9 +17,7 @@ struct Person: Identifiable {
 }
 
 struct PeopleSegmentView: View {
-    @State private var selectedTabIndex = 1 // People tab selected by default
-    
-    /// Mock data for people
+    // TODO: 실제 데이터로 변경 후 삭제
     private let people = [
         Person(name: "Enoch", imageName: "person.fill", totalCards: 13, currentCard: 1),
         Person(name: "Mumin", imageName: "person.fill", totalCards: 8, currentCard: 1),
@@ -31,148 +29,46 @@ struct PeopleSegmentView: View {
     
     var body: some View {
         NavigationView {
-            ZStack {
-                VStack(spacing: 0) {
-                    /// Top navigation bar
-                    HStack {
-                        Spacer()
-                        
-                        HStack(spacing: 16) {
-                            /// Search icon
-                            Button(action: searchTapped) {
-                                Image(systemName: "magnifyingglass")
-                                    .font(.system(size: 20))
-                                    .foregroundColor(.white)
-                                    .frame(width: 40, height: 40)
-                                    .background(Color.white.opacity(0.2))
-                                    .clipShape(Circle())
-                            }
-                            
-                            /// Profile icon
-                            Button(action: profileTapped) {
-                                Image(systemName: "person.crop.circle")
-                                    .font(.system(size: 20))
-                                    .foregroundColor(.white)
-                                    .frame(width: 40, height: 40)
-                                    .background(Color.white.opacity(0.2))
-                                    .clipShape(Circle())
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 60)
-                    
-                    /// Navigation tabs
-                    HStack {
-                        ForEach(0..<4) { index in
-                            let icons = ["message", "person.2", "calendar", "map"]
-                            let isSelected = index == selectedTabIndex
-                            
-                            Button(action: { tabTapped(at: index) }) {
-                                Image(systemName: icons[index])
-                                    .font(.system(size: 18))
-                                    .foregroundColor(isSelected ? .black : .white)
-                                    .frame(width: 50, height: 50)
-                                    .background(
-                                        isSelected ? Color.white : Color.white.opacity(0.2)
-                                    )
-                                    .clipShape(Circle())
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 40)
-                    .padding(.top, 90)
-                    
-                    Spacer()
-                    
-                    /// People grid
-                    LazyVGrid(columns: [
-                        GridItem(.flexible()),
-                        GridItem(.flexible()),
-                        GridItem(.flexible()),
-                    ], spacing: 40) {
-                        ForEach(people) { person in
-                            VStack(spacing: 8) {
-                                NavigationLink(
-                                    destination: PeopleDetailView(person: person)
-                                ) {
-                                    ZStack {
-                                        /// Circle background
-                                        Circle()
-                                            .fill(
-                                                person.name == "Mumin" 
-                                                ? Color.white 
-                                                : Color.white.opacity(0.2)
-                                            )
-                                            .frame(width: 80, height: 80)
-                                        
-                                        /// Person icon
-                                        Image(systemName: person.imageName)
-                                            .font(.system(size: 30))
-                                            .foregroundColor(
-                                                person.name == "Mumin" ? .gray : .white
-                                            )
-                                    }
+            VStack(spacing: 0) {
+                /// People grid
+                LazyVGrid(columns: [
+                    GridItem(.flexible()),
+                    GridItem(.flexible()),
+                    GridItem(.flexible()),
+                ], spacing: 32) {
+                    ForEach(people) { person in
+                        VStack(spacing: 8) {
+                            // TODO: 네비게이션 어떻게 다룰지 의논 필요
+                            NavigationLink(
+                                destination: PeopleDetailView(person: person)
+                            ) {
+                                ZStack {
+                                    /// Circle background
+                                    Circle()
+                                        .fill(Color.black.opacity(0.4))
+                                        .frame(width: 96, height: 96)
+                                    
+                                    /// Person icon
+                                    Image(systemName: person.imageName)
+                                        .font(.system(size: 30))
+                                        .foregroundColor(.white)
                                 }
-                                
-                                Text(person.name)
-                                    .font(.chPrimaryCaptionMedium)
-                                    .foregroundColor(.white)
                             }
+                            
+                            Text(person.name)
+                                .font(.chBodyBold)
+                                .foregroundColor(.white)
                         }
                     }
-                    .padding(.horizontal, 40)
-                    
-                    Spacer()
-                    
-                    /// Bottom tagging button
-                    Button(action: taggingTapped) {
-                        Image(systemName: "asterisk")
-                            .font(.system(size: 24))
-                            .foregroundColor(.white)
-                            .frame(width: 60, height: 60)
-                            .background(Color.white.opacity(0.3))
-                            .clipShape(Circle())
-                    }
-                    .padding(.bottom, 50)
                 }
+                .padding(.horizontal, 25)
+                
+                Spacer()
             }
-            .background(.black.opacity(0.05))
-            .background(
-                EllipticalGradient(
-                    stops: [
-                        Gradient.Stop(
-                            color: Color(red: 0.11, green: 0.22, blue: 0.53),
-                            location: 0.00
-                        ),
-                        Gradient.Stop(
-                            color: Color(red: 0.62, green: 0.66, blue: 0.88),
-                            location: 1.00
-                        ),
-                    ],
-                    center: UnitPoint(x: -0.05, y: 0.21)
-                )
-            )
-            .ignoresSafeArea()
+            // TODO: Custom Background에 얹을 거라서 삭제
+            .background(Color.blue)
         }
-    }
-    
-    // MARK: - Event Handlers
-    
-    private func searchTapped() {
-        // TODO: Search functionality
-    }
-    
-    private func profileTapped() {
-        // TODO: Profile functionality
-    }
-    
-    private func tabTapped(at index: Int) {
-        selectedTabIndex = index
-    }
-    
-    private func taggingTapped() {
-        // TODO: Tagging functionality
+        
     }
 }
 
