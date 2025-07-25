@@ -21,21 +21,19 @@ struct CHNavBar: View {
         Button(action: {
             
         }, label: {
-            ZStack {
-                // TODO: 색 조정 필요
-                Image(systemName: "magnifyingglass")
-                    .resizable()
-                    .foregroundStyle(Color(hex: "#CECECE"))
-                
-                Image(systemName: "magnifyingglass")
-                    .resizable()
-                    .foregroundStyle(.white.opacity(0.4))
-            }
-            .frame(width: 16.39, height: 16.54)
-            .padding(.horizontal,11.80)
-            .padding(.vertical, 11.73)
-            .background(.black.opacity(0.4))
-            .clipShape(Circle())
+            // TODO: 색 조정 필요
+            Image(systemName: "magnifyingglass")
+                .resizable()
+                .foregroundStyle(Color(hex: "#CECECE"))
+                .mask({
+                    Color.white
+                    .blendMode(.lighten)
+                })
+                .frame(width: 16.39, height: 16.54)
+                .padding(.horizontal,11.80)
+                .padding(.vertical, 11.73)
+                .background(.black.opacity(0.4))
+                .clipShape(Circle())
         })
     }
     
