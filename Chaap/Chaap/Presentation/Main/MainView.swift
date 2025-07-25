@@ -15,13 +15,13 @@ struct MainView: View {
             ZStack {
                 selectedSegmentView
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .center, spacing: 15) {
+                    CHNavBar()
                     SegmentControlPicker(selected: $viewModel.selectedSegement)
-                        .safeAreaPadding(.top, 68)
-                    
                     Spacer()
                 }
-                
+                .safeAreaPadding(.top, 14)
+                .safeAreaPadding(.horizontal, 16)
                 VStack {
                     Spacer()
                     CHFloatingBtn()
