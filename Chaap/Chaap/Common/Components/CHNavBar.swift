@@ -1,0 +1,57 @@
+//
+//  CHNavBar.swift
+//  Chaap
+//
+//  Created by Enoch on 7/25/25.
+//
+
+import SwiftUI
+
+struct CHNavBar: View {
+    var body: some View {
+        HStack(spacing: 9) {
+            Spacer()
+            searchBtn
+            profileBtn
+        }
+    }
+    
+    // MARK: - Search Btn
+    var searchBtn: some View {
+        Button(action: {
+            
+        }, label: {
+            ZStack {
+                // TODO: 색 조정 필요
+                Image(systemName: "magnifyingglass")
+                    .resizable()
+                    .foregroundStyle(Color(hex: "#CECECE"))
+                
+                Image(systemName: "magnifyingglass")
+                    .resizable()
+                    .foregroundStyle(.white.opacity(0.4))
+            }
+            .frame(width: 16.39, height: 16.54)
+            .padding(.horizontal,11.80)
+            .padding(.vertical, 11.73)
+            .background(.black.opacity(0.4))
+            .clipShape(Circle())
+        })
+    }
+    
+    // MARK: - Profile Btn
+    var profileBtn: some View {
+        Button(action: {
+            
+        }, label: {
+            Circle()
+                .foregroundStyle(.white)
+                .frame(width: 40, height: 40)
+                .clipShape(Circle())
+        })
+    }
+}
+
+#Preview {
+    CHNavBar()
+}
