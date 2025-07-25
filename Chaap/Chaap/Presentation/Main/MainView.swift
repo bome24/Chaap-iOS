@@ -21,6 +21,11 @@ struct MainView: View {
                     
                     Spacer()
                 }
+                
+                VStack {
+                    Spacer()
+                    CHFloatingBtn()
+                }
             }
         }
     }
