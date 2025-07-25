@@ -11,13 +11,13 @@ struct CHNavBar: View {
     var body: some View {
         HStack(spacing: 9) {
             Spacer()
-            searchBtn
-            profileBtn
+            searchButton
+            profileButton
         }
     }
     
-    // MARK: - Search Btn
-    var searchBtn: some View {
+    // MARK: - Search Button
+    var searchButton: some View {
         Button(action: {
             
         }, label: {
@@ -37,8 +37,8 @@ struct CHNavBar: View {
         })
     }
     
-    // MARK: - Profile Btn
-    var profileBtn: some View {
+    // MARK: - Profile Button
+    var profileButton: some View {
         Button(action: {
             
         }, label: {
