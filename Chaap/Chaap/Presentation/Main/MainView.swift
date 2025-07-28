@@ -9,11 +9,11 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject private var viewModel = SegmentsViewModel()
-    @StateObject private var navManager = CHNavigationManager()
+    @StateObject private var navigationManager = CHNavigationManager()
     @Environment(\.modelContext) private var modelContext
     
     var body: some View {
-        NavigationStack(path: $navManager.appRoutes) {
+        NavigationStack(path: $navigationManager.appRoutes) {
             ZStack {
                 selectedSegmentView
                 
@@ -27,7 +27,7 @@ struct MainView: View {
                 VStack {
                     Spacer()
                     CHFloatingButton()
-                        .environmentObject(navManager)
+                        .environmentObject(navigationManager)
                 }
             }
             .safeAreaPadding(.horizontal, 16)
