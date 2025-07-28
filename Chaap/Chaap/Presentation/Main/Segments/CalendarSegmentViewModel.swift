@@ -113,8 +113,8 @@ class CalendarSegmentViewModel: ObservableObject {
     }
     
     /// 선택된 날짜의 이벤트 목록
-    var eventsForSelectedDate: [CalendarEvent] {
-        return eventsForDate(selectedDate)
+    var eventsForSelectedDate: [Chaap] {
+        return chaapsForDate(selectedDate)
     }
     
     // MARK: - Initialization
@@ -165,7 +165,7 @@ class CalendarSegmentViewModel: ObservableObject {
     
     /// 특정 날짜에 이벤트가 있는지 확인
     func hasEvents(on date: Date) -> Bool {
-        return !eventsForDate(date).isEmpty
+        return !chaapsForDate(date).isEmpty
     }
     
     /// 날짜 셀의 텍스트 색상 결정
@@ -262,8 +262,8 @@ class CalendarSegmentViewModel: ObservableObject {
         return calendar.date(from: components)
     }
     
-    /// 특정 날짜의 이벤트 목록 가져오기 (실제 Chaap 데이터 사용)
-    private func eventsForDate(_ date: Date) -> [CalendarEvent] {
+    /// 특정 날짜의 챱 목록 가져오기
+    private func chaapsForDate(_ date: Date) -> [Chaap] {
         // Calendar의 startOfDay와 endOfDay를 구하여 해당 날짜의 Chaap들을 필터링
         let startOfDay = calendar.startOfDay(for: date)
         guard let endOfDay = calendar.date(
@@ -284,28 +284,10 @@ class CalendarSegmentViewModel: ObservableObject {
         
         do {
             let chaaps = try modelContext.fetch(descriptor)
-            return chaaps.map { chaap in
-                convertChaapToCalendarEvent(chaap: chaap)
-            }
+            return chaaps
         } catch {
             print("Failed to fetch chaaps: \(error)")
             return []
         }
-    }
-    
-    /// Chaap을 CalendarEvent로 변환
-    private func convertChaapToCalendarEvent(chaap: Chaap) -> CalendarEvent {
-        let title = chaap.title ?? "챱 기록"
-        let time = chaap.createdAt.formatted()
-        let location = chaap.place ?? ""
-        let organizer = chaap.peers.first?.displayName ?? "나"
-        
-        return CalendarEvent(
-            id: chaap.id.uuidString,
-            title: title,
-            time: time,
-            location: location,
-            organizer: organizer
-        )
     }
 } 

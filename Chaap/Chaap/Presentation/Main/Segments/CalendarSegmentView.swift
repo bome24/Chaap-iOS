@@ -11,6 +11,8 @@ import NearbyInteraction
 
 struct CalendarSegmentView: View {
     @StateObject private var viewModel: CalendarSegmentViewModel
+    @State private var showChaapDetail = false
+    @State private var selectedChaap: Chaap?
     
     init(modelContext: ModelContext) {
         _viewModel = StateObject(
@@ -187,9 +189,16 @@ struct CalendarSegmentView: View {
     private var eventsList: some View {
         ScrollView {
             VStack(spacing: 0) {
-                ForEach(viewModel.eventsForSelectedDate, id: \.id) { event in
-                    eventRow(event: event)
-                    if event.id != viewModel.eventsForSelectedDate.last?.id {
+                ForEach(viewModel.eventsForSelectedDate, id: \.id) { chaap in
+                    PeerChaapRow(chaap: chaap)
+                        .padding(.horizontal, 9)
+                        .padding(.vertical, 6)
+                        .onTapGesture {
+                            selectedChaap = chaap
+                            showChaapDetail = true
+                        }
+                    
+                    if chaap.id != viewModel.eventsForSelectedDate.last?.id {
                         Divider()
                             .padding(.leading, 38)
                     }
@@ -198,56 +207,13 @@ struct CalendarSegmentView: View {
         }
         .padding(.top, 6)
         .frame(maxHeight: 150)
-    }
-    
-    private func eventRow(event: CalendarEvent) -> some View {
-        HStack(spacing: 8) {
-            Circle()
-                .fill(Color.gray.opacity(0.3))
-                .frame(width: 27, height: 27)
-                .overlay(
-                    Text(String(event.organizer.prefix(1)))
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundColor(.black)
-                )
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(event.title)
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(.black)
-
-                HStack {
-                    Text(event.time)
-                        .font(.system(size: 9))
-                        .foregroundColor(.gray)
-
-                    if !event.location.isEmpty {
-                        Image(systemName: "location")
-                            .font(.system(size: 8))
-                            .foregroundColor(.gray)
-                        Text(event.location)
-                            .font(.system(size: 9))
-                            .foregroundColor(.gray)
-                    }
-                }
+        .chBottomModal(isPresented: $showChaapDetail) {
+            if let selectedChaap = selectedChaap {
+                CHCardShow(viewModel: CHCardShowViewModel(chaap: selectedChaap))
+                    .frame(height: 400)
             }
-
-            Spacer()
         }
-        .padding(.horizontal, 9)
-        .padding(.vertical, 6)
     }
-}
-
-// MARK: - CalendarEvent 모델
-// Chaap 데이터를 캘린더에 표시하기 위한 변환용 모델
-
-struct CalendarEvent {
-    let id: String
-    let title: String
-    let time: String
-    let location: String
-    let organizer: String
 }
 
 struct CalendarSegmentView_Previews: PreviewProvider {
