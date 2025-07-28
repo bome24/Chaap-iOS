@@ -10,6 +10,8 @@ import SwiftData
 import Lottie
 
 struct TagView: View {
+    @Environment (\.dismiss) var dismiss
+    
     @State private var viewModel: TagViewModel
     
     @State private var showPeerList = false
@@ -64,6 +66,7 @@ struct TagView: View {
                     .frame(height: 64)
                 Button {
                     print("닫기 버튼 누름")
+                    dismiss()
                 } label: {
                     Image(.taggingCloseButton)
                 }
