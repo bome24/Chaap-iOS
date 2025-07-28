@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MainView: View {
     @StateObject private var viewModel = SegmentsViewModel()
+    @Environment(\.modelContext) private var modelContext
 
     var body: some View {
         NavigationStack {
@@ -39,7 +41,7 @@ struct MainView: View {
         case .peopleSegment:
             PeopleSegmentView()
         case .calendarSegment:
-            CalendarSegmentView()
+            CalendarSegmentView(modelContext: modelContext)
         case .mapSegment:
             MapSegmentView()
         }

@@ -6,9 +6,17 @@
 //
 
 import SwiftUI
+import SwiftData
+import NearbyInteraction
 
 struct CalendarSegmentView: View {
-    @StateObject private var viewModel = CalendarSegmentViewModel()
+    @StateObject private var viewModel: CalendarSegmentViewModel
+    
+    init(modelContext: ModelContext) {
+        _viewModel = StateObject(
+            wrappedValue: CalendarSegmentViewModel(modelContext: modelContext)
+        )
+    }
 
     var body: some View {
         ZStack {
@@ -43,7 +51,7 @@ struct CalendarSegmentView: View {
 
             HStack(spacing: 0) {
                 Button {
-                    viewModel.didTapPreviousMonth()
+                    viewModel.previousMonthWasTapped()
                 } label: {
                     Image(systemName: "chevron.left")
                         .foregroundColor(Color(hex: "#919191"))
@@ -53,14 +61,16 @@ struct CalendarSegmentView: View {
 
                 Spacer()
 
-                Text(viewModel.monthYearFormatter.string(from: viewModel.currentMonth))
-                    .font(.chBodyBold)
-                    .foregroundColor(.white)
+                Text(
+                    viewModel.monthYearFormatter.string(from: viewModel.currentMonth)
+                )
+                .font(.chBodyBold)
+                .foregroundColor(.white)
 
                 Spacer()
 
                 Button {
-                    viewModel.didTapNextMonth()
+                    viewModel.nextMonthWasTapped()
                 } label: {
                     Image(systemName: "chevron.right")
                         .foregroundColor(Color(hex: "#919191"))
@@ -173,7 +183,7 @@ struct CalendarSegmentView: View {
         }
     }
 
-    //TODO: Custom Modal로 변경해야 함.    
+    //TODO: Custom Modal로 변경해야 함.
     private var eventsList: some View {
         ScrollView {
             VStack(spacing: 0) {
@@ -230,7 +240,7 @@ struct CalendarSegmentView: View {
 }
 
 // MARK: - CalendarEvent 모델
-// TODO: 실제 기록 모델로 변경 혹은 캘린더 이벤트용 모델 따로 생성
+// Chaap 데이터를 캘린더에 표시하기 위한 변환용 모델
 
 struct CalendarEvent {
     let id: String
@@ -240,7 +250,17 @@ struct CalendarEvent {
     let organizer: String
 }
 
-#Preview {
-    CalendarSegmentView()
-        .background(Color.black)
+struct CalendarSegmentView_Previews: PreviewProvider {
+    static var previews: some View {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(
+            for: Chaap.self,
+            Peer.self,
+            configurations: config
+        )
+        
+        CalendarSegmentView(modelContext: container.mainContext)
+            .background(Color.black)
+            .modelContainer(container)
+    }
 }

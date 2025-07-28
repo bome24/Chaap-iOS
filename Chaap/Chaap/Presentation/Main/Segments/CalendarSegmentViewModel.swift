@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Foundation
+import SwiftData
 
 class CalendarSegmentViewModel: ObservableObject {
     // MARK: - Published Properties
@@ -16,7 +17,8 @@ class CalendarSegmentViewModel: ObservableObject {
     // MARK: - Private Properties
     private let calendar = Calendar.current
     private let startYear = 2025
-    private let endYear = 2034 /// 10년간
+    private let endYear = 2034 // 10년간
+    private var modelContext: ModelContext
     
     // MARK: - Computed Properties
     
@@ -29,7 +31,15 @@ class CalendarSegmentViewModel: ObservableObject {
     
     /// 한국식 월요일 시작 요일
     var weekdays: [String] {
-        return ["월", "화", "수", "목", "금", "토", "일",]
+        return [
+            "월",
+            "화",
+            "수",
+            "목",
+            "금",
+            "토",
+            "일",
+        ]
     }
     
     /// 현재 월의 날짜 배열
@@ -44,12 +54,12 @@ class CalendarSegmentViewModel: ObservableObject {
         let firstOfMonth = monthInterval.start
         let firstWeekday = calendar.component(.weekday, from: firstOfMonth)
         
-        /// 월요일 시작으로 조정 (일요일=1, 월요일=2 -> 월요일=0, 일요일=6)
+        // 월요일 시작으로 조정 (일요일=1, 월요일=2 -> 월요일=0, 일요일=6)
         let adjustedFirstWeekday = (firstWeekday + 5) % 7
         
         var days: [Date] = []
         
-        /// 이전 달 날짜들로 첫 주 채우기
+        // 이전 달 날짜들로 첫 주 채우기
         if adjustedFirstWeekday > 0 {
             for dayOffset in (1...adjustedFirstWeekday).reversed() {
                 if let previousDate = calendar.date(
@@ -62,7 +72,7 @@ class CalendarSegmentViewModel: ObservableObject {
             }
         }
         
-        /// 해당 월의 모든 날짜 추가
+        // 해당 월의 모든 날짜 추가
         let numberOfDays = calendar.range(
             of: .day,
             in: .month,
@@ -79,7 +89,7 @@ class CalendarSegmentViewModel: ObservableObject {
             }
         }
         
-        /// 다음 달 날짜들로 마지막 주 채우기 (7의 배수로 맞추기)
+        // 다음 달 날짜들로 마지막 주 채우기 (7의 배수로 맞추기)
         let remainingCells = 7 - (days.count % 7)
         if remainingCells < 7 {
             let lastDayOfMonth = calendar.date(
@@ -109,14 +119,15 @@ class CalendarSegmentViewModel: ObservableObject {
     
     // MARK: - Initialization
     
-    init() {
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
         calendarDidInitialize()
     }
     
     // MARK: - Public Methods
     
     /// 다음 월로 이동
-    func didTapNextMonth() {
+    func nextMonthWasTapped() {
         guard canNavigateMonth(1) else { return }
         
         if let newMonth = calendar.date(
@@ -131,7 +142,7 @@ class CalendarSegmentViewModel: ObservableObject {
     }
     
     /// 이전 월로 이동
-    func didTapPreviousMonth() {
+    func previousMonthWasTapped() {
         guard canNavigateMonth(-1) else { return }
         
         if let newMonth = calendar.date(
@@ -251,32 +262,50 @@ class CalendarSegmentViewModel: ObservableObject {
         return calendar.date(from: components)
     }
     
-    /// 특정 날짜의 이벤트 목록 가져오기
+    /// 특정 날짜의 이벤트 목록 가져오기 (실제 Chaap 데이터 사용)
     private func eventsForDate(_ date: Date) -> [CalendarEvent] {
-        let selectedDay = calendar.component(.day, from: date)
-        let selectedMonth = calendar.component(.month, from: date)
-        let selectedYear = calendar.component(.year, from: date)
-        
-        /// 예시 데이터 (실제로는 데이터베이스나 API에서 가져와야 함)
-        if selectedYear == 2025 && selectedMonth == 7 && selectedDay == 2 {
-            return [
-                CalendarEvent(
-                    id: "1",
-                    title: "학식 데이트~!",
-                    time: "18:00",
-                    location: "포항공과대학교",
-                    organizer: "peppr"
-                ),
-                CalendarEvent(
-                    id: "2",
-                    title: "학식 데이트~!",
-                    time: "18:00",
-                    location: "포항공과대학교",
-                    organizer: "peppr"
-                ),
-            ]
+        // Calendar의 startOfDay와 endOfDay를 구하여 해당 날짜의 Chaap들을 필터링
+        let startOfDay = calendar.startOfDay(for: date)
+        guard let endOfDay = calendar.date(
+            byAdding: .day,
+            value: 1,
+            to: startOfDay
+        ) else {
+            return []
         }
         
-        return []
+        // SwiftData에서 해당 날짜의 Chaap들을 가져오기
+        let descriptor = FetchDescriptor<Chaap>(
+            predicate: #Predicate { chaap in
+                chaap.createdAt >= startOfDay && chaap.createdAt < endOfDay
+            },
+            sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
+        )
+        
+        do {
+            let chaaps = try modelContext.fetch(descriptor)
+            return chaaps.map { chaap in
+                convertChaapToCalendarEvent(chaap: chaap)
+            }
+        } catch {
+            print("Failed to fetch chaaps: \(error)")
+            return []
+        }
+    }
+    
+    /// Chaap을 CalendarEvent로 변환
+    private func convertChaapToCalendarEvent(chaap: Chaap) -> CalendarEvent {
+        let title = chaap.title ?? "챱 기록"
+        let time = chaap.createdAt.formatted()
+        let location = chaap.place ?? ""
+        let organizer = chaap.peers.first?.displayName ?? "나"
+        
+        return CalendarEvent(
+            id: chaap.id.uuidString,
+            title: title,
+            time: time,
+            location: location,
+            organizer: organizer
+        )
     }
 } 
