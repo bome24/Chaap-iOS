@@ -17,9 +17,13 @@ struct PeerChaapRow: View {
             VStack {
                 if !chaap.peers.isEmpty {
                     Text("[\(chaap.peers.map { $0.displayName }.joined(separator: ", "))]")
+                        .font(.chPrimaryCaptionMedium)
+                        .foregroundStyle(Color.chLabelWhiteSecondary)
                 }
                 if let title = chaap.title {
                     Text(title)
+                        .font(.chBodyMedium)
+                        .foregroundStyle(Color.chLabelWhitePrimary)
                 }
             }
             VStack {
@@ -28,6 +32,8 @@ struct PeerChaapRow: View {
                     Text(place)
                 }
             }
+            .font(.chPrimaryCaptionMedium)
+            .foregroundStyle(Color.chLabelWhiteSecondary)
         }
     }
 }
