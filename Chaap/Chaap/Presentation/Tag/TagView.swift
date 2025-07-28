@@ -72,6 +72,8 @@ struct TagView: View {
         }
         .onAppear {
             viewModel.startMPC()
+            viewModel.prepareToPlayAudio()
+            viewModel.playAudio()
         }
         .onChange(of: viewModel.mpcManager?.nearbyPeers.count) {
             if viewModel.mpcManager?.nearbyPeers.count ?? 0 >= 1 {
