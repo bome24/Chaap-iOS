@@ -28,7 +28,7 @@ struct PeopleSegmentView: View {
     ]
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 0) {
                 /// People grid
                 LazyVGrid(columns: [
@@ -65,8 +65,6 @@ struct PeopleSegmentView: View {
                 
                 Spacer()
             }
-            // TODO: Custom Background에 얹을 거라서 삭제
-            .background(Color.blue)
         }
         
     }
