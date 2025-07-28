@@ -29,7 +29,7 @@ struct CalendarSegmentView: View {
                 Spacer()
                 
                 ZStack {
-                    CHCalendarBG(bottomExtension: -295)
+                    CHCalendarBG(bottomExtension: -255)
                     
                     VStack(alignment: .center, spacing: 16) {
                         monthHeader
@@ -41,7 +41,7 @@ struct CalendarSegmentView: View {
                         .frame(maxWidth: .infinity, alignment: .topLeading)
                         Spacer()
                     }
-                    .padding(.horizontal, -10)
+                    .padding(.horizontal, -19)
                     .padding(.vertical, 24)
                 }
                 .padding(.horizontal, 24)
