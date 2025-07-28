@@ -39,11 +39,11 @@ struct CHCardShow: View {
             // 상대 프로필 닉네임
             Text("with \(chaap.peers.first?.displayName ?? "이름 없음")")
                 .font(.chBodyBold)
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.chLabelWhitePrimary)
             
             Text(chaap.createdAt.formatted(date: .abbreviated, time: .shortened))
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(Color.chLabelWhitePrimary)
         }
     }
     
@@ -53,12 +53,12 @@ struct CHCardShow: View {
             // 기록 제목
             Text(chaap.title)
                 .font(.chBodyBold)
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.chLabelWhitePrimary)
             
             // 기록 내용
             Text(chaap.memo)
                 .font(.chBodyRegular)
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(Color.chLabelWhitePrimary)
         }
     }
     
@@ -66,13 +66,13 @@ struct CHCardShow: View {
     var bottomContent: some View {
         HStack(spacing: 4) {
             // 장소 아이콘
-            Image(systemName: "pin.fill")
-                .foregroundStyle(.white.opacity(0.8))
+            Image(.placeMarker)
+                .foregroundStyle(Color.chLabelWhitePrimary)
             
             // 위치 정보
             Text(chaap.place)
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(Color.chLabelWhitePrimary)
         }
     }
 }
