@@ -9,6 +9,7 @@ import SwiftUI
 
 struct EditProfileView: View {
     @Bindable var viewModel = EditProfileViewModel()
+    @EnvironmentObject private var navigationManager: CHNavigationManager
     
     @Environment(\.dismiss) var dismiss
     
@@ -40,6 +41,7 @@ struct EditProfileView: View {
                         Button("저장") {
                             viewModel.saveNickname()
                             // TODO: 연결
+                            navigationManager.pop()
                         }
                         .font(.chPrimaryCaptionMedium)
                         .foregroundColor(viewModel.hasChanges ? .chLabelBlackPrimary : .chLabelBlackSecondary)
