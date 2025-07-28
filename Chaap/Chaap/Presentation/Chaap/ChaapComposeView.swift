@@ -147,5 +147,6 @@ struct ChaapComposeView: View {
             }
             .safeAreaPadding(.horizontal, 16)
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
