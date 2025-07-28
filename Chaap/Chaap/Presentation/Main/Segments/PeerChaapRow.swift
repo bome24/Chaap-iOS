@@ -39,7 +39,7 @@ struct PeerChaapRow: View {
                 // 사람 이름
                 if !chaap.peers.isEmpty {
                     Text(chaap.peers.map { $0.displayName }.joined(separator: ", "))
-                        .font(.chPrimaryCaptionMedium)
+                        .font(.chSecondaryCaptionRegular)
                         .foregroundStyle(Color.chLabelWhiteSecondary)
                 }
                 
@@ -48,7 +48,13 @@ struct PeerChaapRow: View {
                     Text(title)
                         .font(.chBodyMedium)
                         .foregroundStyle(Color.chLabelWhitePrimary)
-                        .multilineTextAlignment(.leading)
+                        .lineLimit(1)
+                } else {
+                    /// title 빈 경우 공백으로 자리 차지
+                    Text("")
+                        .font(.chBodyMedium)
+                        .foregroundStyle(Color.chLabelWhitePrimary)
+                        .lineLimit(1)
                 }
             }
             
@@ -57,15 +63,20 @@ struct PeerChaapRow: View {
             VStack(alignment: .trailing, spacing: 4) {
                 // 날짜 시간
                 Text(formatDateTime(chaap.createdAt))
-                    .font(.chPrimaryCaptionMedium)
+                    .font(.chSecondaryCaptionRegular)
                     .foregroundStyle(Color.chLabelWhiteSecondary)
                 
                 // 장소
                 if let place = chaap.place, !place.isEmpty {
                     Text(place)
-                        .font(.chPrimaryCaptionMedium)
+                        .font(.chSecondaryCaptionRegular)
                         .foregroundStyle(Color.chLabelWhiteSecondary)
-                        .multilineTextAlignment(.trailing)
+                        .lineLimit(1)
+                } else {
+                    Text("")
+                        .font(.chSecondaryCaptionRegular)
+                        .foregroundStyle(Color.chLabelWhiteSecondary)
+                        .lineLimit(1)
                 }
             }
         }
