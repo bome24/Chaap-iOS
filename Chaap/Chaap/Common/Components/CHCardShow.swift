@@ -51,12 +51,12 @@ struct CHCardShow: View {
     var middleContent: some View {
         VStack(spacing: 8) {
             // 기록 제목
-            Text(chaap.title ?? "제목 없음")
+            Text(chaap.title)
                 .font(.chBodyBold)
                 .foregroundStyle(.white)
             
             // 기록 내용
-            Text(chaap.memo ?? "내용 없음")
+            Text(chaap.memo)
                 .font(.chBodyRegular)
                 .foregroundStyle(.white.opacity(0.8))
         }
@@ -70,7 +70,7 @@ struct CHCardShow: View {
                 .foregroundStyle(.white.opacity(0.8))
             
             // 위치 정보
-            Text(chaap.place ?? "위치 없음")
+            Text(chaap.place)
                 .font(.caption)
                 .foregroundStyle(.white.opacity(0.8))
         }
