@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct PeopleDetailView: View {
-    let person: Person
+    let peer: Peer
     @Environment(\.presentationMode) var presentationMode
+    
+    var totalCards: Int = 13
+    var currentCard: Int = 1
     
     var body: some View {
         ZStack {
@@ -30,7 +33,7 @@ struct PeopleDetailView: View {
                     }
                     HStack {
                         Spacer()
-                        Text(person.name)
+                        Text(peer.displayName)
                             .font(.systemEmphasized)
                             .foregroundColor(.white)
                         
@@ -40,7 +43,7 @@ struct PeopleDetailView: View {
                 .padding(.horizontal, 16)
                 
                 /// Card counter
-                Text("\(person.currentCard) / \(person.totalCards)")
+                Text("\(currentCard) / \(totalCards)")
                     .font(.chBodyBold)
                     .foregroundColor(.white)
                 
@@ -59,16 +62,3 @@ struct PeopleDetailView: View {
         presentationMode.wrappedValue.dismiss()
     }
 }
-
-#Preview {
-    NavigationView {
-        PeopleDetailView(
-            person: Person(
-                name: "Peppr",
-                imageName: "person.fill",
-                totalCards: 13,
-                currentCard: 1
-            )
-        )
-    }
-} 
