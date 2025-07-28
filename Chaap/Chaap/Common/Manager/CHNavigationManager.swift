@@ -12,6 +12,7 @@ enum CHAppRoute: Hashable {
     case search
     case editProfile
     case tag
+    case compose(Chaap)
 }
 
 class CHNavigationManager: ObservableObject {

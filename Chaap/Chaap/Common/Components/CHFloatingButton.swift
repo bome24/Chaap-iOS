@@ -9,12 +9,10 @@ import SwiftUI
 import SwiftData
 
 struct CHFloatingButton: View {
-    @EnvironmentObject private var navigationManager: CHNavigationManager
+    var didPressFloatingButton: () -> Void
     
     var body: some View {
-        Button(action: {
-            navigationManager.push(.tag)
-        }, label: {
+        Button(action: didPressFloatingButton) {
             Image(.chaapBtn)
                 .resizable()
                 .frame(width: 33.37298, height: 31.7691)
@@ -64,10 +62,6 @@ struct CHFloatingButton: View {
                             )
                     }
                 )
-        })
+        }
     }
-}
-
-#Preview {
-    CHFloatingButton()
 }

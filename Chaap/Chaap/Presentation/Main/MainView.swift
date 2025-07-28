@@ -26,8 +26,9 @@ struct MainView: View {
                 .safeAreaPadding(.horizontal, 16)
                 VStack {
                     Spacer()
-                    CHFloatingButton()
-                        .environmentObject(navigationManager)
+                    CHFloatingButton {
+                        navigationManager.push(.tag)
+                    }
                 }
             }
             .safeAreaPadding(.horizontal, 16)
@@ -35,12 +36,16 @@ struct MainView: View {
                 switch route {
                 case .tag:
                     TagView(modelContext: modelContext)
+                        .environmentObject(navigationManager)
                 case .search:
                     // 다른 뷰
                     SearchView()
                 case .editProfile:
                     EditProfileView()
+                case .compose(let chaap):
+                    ChaapComposeView(chaap: chaap)
                 }
+                
             }
         }
     }
