@@ -17,6 +17,7 @@ import AVFoundation
 class TagViewModel: NSObject {
     var hasCreatedChaap = false
     let modelContext: ModelContext
+    var createdChaap: Chaap?
     
     /// LocationManager
     var locationManager = TagLocationManager.shared
@@ -282,11 +283,21 @@ extension TagViewModel: NISessionDelegate {
             if isNearby(distance), !hasCreatedChaap {
                 hasCreatedChaap = true
                 Task {
-                    await createChaap(peerToken: peerToken)
-                    stopNI()
-                    stopMPC()
-                    resetSessionState()
+//                    await createChaap(peerToken: peerToken)
+//                    stopNI()
+//                    stopMPC()
+//                    resetSessionState()
+                    if let chaap = await createChaap(peerToken: peerToken) {
+//                        await MainActor.run {
+                            self.createdChaap = chaap
+                            stopNI()
+                            stopMPC()
+                            resetSessionState()
+//                        }
+                    }
                 }
+                
+                
             }
         }
     }

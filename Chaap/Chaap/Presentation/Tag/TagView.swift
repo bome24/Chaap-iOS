@@ -12,6 +12,7 @@ import Lottie
 struct TagView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var navigationManager: CHNavigationManager
+    @State private var pushed = false
     
     @State private var viewModel: TagViewModel
     
@@ -176,8 +177,11 @@ struct TagView: View {
             }
         }
         
-//        .sheet(isPresented: $showChaapList) {
-//            ShowChaapTestView()
-//        }
+        .onChange(of: viewModel.createdChaap) { _, newChaap in
+            guard let chaap = newChaap, !pushed else { return }
+            pushed = true
+            navigationManager.push(.compose(chaap))
+        }
+        .navigationBarBackButtonHidden(true)
     }
 }
