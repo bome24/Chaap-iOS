@@ -61,10 +61,11 @@ struct MainView: View {
                     TagView(modelContext: modelContext)
                         .environmentObject(navigationManager)
                 case .search:
-                    // 다른 뷰
                     SearchView()
+                        .environmentObject(navigationManager)
                 case .editProfile:
                     EditProfileView()
+                        .environmentObject(navigationManager)
                 case .compose(let chaap):
                     ChaapComposeView(chaap: chaap)
                         .environmentObject(navigationManager)
