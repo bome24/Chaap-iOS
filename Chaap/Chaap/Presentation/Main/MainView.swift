@@ -27,6 +27,7 @@ struct MainView: View {
                     CHFloatingBtn()
                 }
             }
+            .safeAreaPadding(.horizontal, 16)
         }
     }
     
