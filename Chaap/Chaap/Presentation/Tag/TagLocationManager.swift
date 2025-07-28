@@ -20,7 +20,7 @@ class TagLocationManager: NSObject {
     var currentLocation: CLLocation?
     var currentHeading: CLHeading?
     
-    var currentAddress: String? = nil
+    var currentAddress: String = ""
     
     var currentSpeed: CLLocationSpeed = 0
     var currentDirection: CLLocationDirection = 0
