@@ -47,12 +47,8 @@ struct TagView: View {
             VStack {
                 Spacer()
                 LottieView(animation: .named("loadingDots"))
-//                    .configure { lottieView in
-//                        lottieView.contentMode = .scaleAspectFit
-//                    }
                     .playing(loopMode: .loop)
-                    .frame(maxWidth: 70, maxHeight: 20)
-//                    .border(.green, width: 2)
+                    .frame(maxWidth: 50, maxHeight: 15)
                     
                 Spacer()
                     .frame(height: 21)
