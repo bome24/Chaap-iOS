@@ -11,7 +11,7 @@ import Foundation
 enum CHAppRoute: Hashable {
     case search
     case editProfile
-    case chaapping
+    case tag
 }
 
 class CHNavigationManager: ObservableObject {
