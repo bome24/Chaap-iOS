@@ -33,19 +33,7 @@ struct CHMainButton: View {
                 .cornerRadius(50)
                 .shadow(color: .black.opacity(0.1), radius: 4.6087, x: 4.6087, y: 4.6087)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 50)
-                        .inset(by: 0.46)
-                        .stroke(.white.opacity(0.6), lineWidth: 0.92174)
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 50)
-                        .inset(by: 0.46)
-                        .stroke(Color(red: 0.93, green: 0.93, blue: 0.93).opacity(0.8), lineWidth: 0.92174)
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 50)
-                        .inset(by: 0.46)
-                        .stroke(.white.opacity(0), lineWidth: 0.92174)
+                    GradientStroke()
                 )
             }
         }
