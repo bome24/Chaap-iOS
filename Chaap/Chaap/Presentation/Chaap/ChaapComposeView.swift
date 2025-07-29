@@ -252,7 +252,7 @@ struct ChaapComposeView: View {
                 CHMainButton(
                     actionType: .save,
                     action: {
-                        dismiss()
+                        navigationManager.goToRoot()
                     }
                 )
             }
