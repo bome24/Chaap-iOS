@@ -11,7 +11,7 @@ struct CHCardBG: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 36.87)
-                .fill(Color(red: 0.85, green: 0.85, blue: 0.85).opacity(0.01))
+                .fill(.black.opacity(0.3))
                 .background(
                     CHBlurView(style: .systemUltraThinMaterialDark)
                         .clipShape(RoundedRectangle(cornerRadius: 36.87))
