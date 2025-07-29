@@ -159,6 +159,28 @@ class CalendarSegmentViewModel: ObservableObject {
     /// 날짜 선택
     func dateWasSelected(_ date: Date) {
         DispatchQueue.main.async {
+            // 선택된 날짜가 현재 월과 다른 월인지 확인
+            let isDateInCurrentMonth = self.calendar.isDate(
+                date,
+                equalTo: self.currentMonth,
+                toGranularity: .month
+            )
+            
+            // 다른 월의 날짜라면 해당 월로 이동
+            if !isDateInCurrentMonth {
+                let selectedYear = self.calendar.component(.year, from: date)
+                let selectedMonth = self.calendar.component(.month, from: date)
+                
+                // 해당 월로 currentMonth 업데이트
+                if let newMonth = self.createDate(year: selectedYear, month: selectedMonth, day: 1) {
+                    // 년도 범위 체크
+                    if selectedYear >= self.startYear && selectedYear <= self.endYear {
+                        self.currentMonth = newMonth
+                    }
+                }
+            }
+            
+            // 선택된 날짜 업데이트
             self.selectedDate = date
         }
     }
