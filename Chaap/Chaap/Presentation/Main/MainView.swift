@@ -12,8 +12,8 @@ struct MainView: View {
     @StateObject private var navigationManager = CHNavigationManager()
     @Environment(\.modelContext) private var modelContext
     
-    @State private var selectedImageName: String? = UserDefaults.standard.string(forKey: "SelectedProfileImageName")
-    
+    @AppStorage("SelectedProfileImageName") private var selectedImageName: String?
+
     var body: some View {
         NavigationStack(path: $navigationManager.appRoutes) {
             ZStack {
@@ -68,7 +68,7 @@ struct MainView: View {
                     SearchView()
                         .environmentObject(navigationManager)
                 case .editProfile:
-                    EditProfileView()
+                    EditProfileView(selectedImageName: $selectedImageName)
                         .environmentObject(navigationManager)
                 case .compose(let chaap):
                     ChaapComposeView(chaap: chaap)
