@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct CHCardShow: View {
-    @State var viewModel: CHCardShowViewModel
+    let chaap: Chaap
     
     var body: some View {
         ZStack {
@@ -36,28 +37,30 @@ struct CHCardShow: View {
                 .foregroundStyle(.white)
             
             // 상대 프로필 닉네임
-            Text("with \(viewModel.peerName)")
+            Text("with \(chaap.peers.first?.displayName ?? "이름 없음")")
                 .font(.chBodyBold)
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.chLabelWhitePrimary)
             
-            Text(viewModel.formattedDate)
+            Text(chaap.createdAt.formatted(date: .abbreviated, time: .shortened))
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(Color.chLabelWhiteSecondary)
         }
     }
     
     // MARK: - middle content (title, content)
     var middleContent: some View {
-        VStack(spacing: 8) {
+        VStack(alignment: .center, spacing: 8) {
             // 기록 제목
-            Text(viewModel.title)
+            Text(chaap.title)
                 .font(.chBodyBold)
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.chLabelWhitePrimary)
             
             // 기록 내용
-            Text(viewModel.memo)
+            Text(chaap.memo)
                 .font(.chBodyRegular)
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(Color.chLabelWhiteSecondary)
+                .multilineTextAlignment(.center)
+                .lineLimit(3)
         }
     }
     
@@ -65,13 +68,13 @@ struct CHCardShow: View {
     var bottomContent: some View {
         HStack(spacing: 4) {
             // 장소 아이콘
-            Image(systemName: "pin.fill")
-                .foregroundStyle(.white.opacity(0.8))
+            Image(.placeMarker)
+                .foregroundStyle(Color.chLabelWhiteSecondary)
             
             // 위치 정보
-            Text(viewModel.location)
+            Text(chaap.place)
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(Color.chLabelWhiteSecondary)
         }
     }
 }

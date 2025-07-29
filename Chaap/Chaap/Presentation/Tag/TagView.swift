@@ -10,6 +10,10 @@ import SwiftData
 import Lottie
 
 struct TagView: View {
+    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject private var navigationManager: CHNavigationManager
+    @State private var pushed = false
+    
     @State private var viewModel: TagViewModel
     
     @State private var showPeerList = false
@@ -18,7 +22,6 @@ struct TagView: View {
     @State private var showDistanceWithPeer = false
     @State private var hasDetectedDistanceChange = false
     
-    @State private var showChaapList = false
     
     init(modelContext: ModelContext) {
         _viewModel = State(initialValue: TagViewModel(modelContext: modelContext))
@@ -40,24 +43,52 @@ struct TagView: View {
                 )
                 .ignoresSafeArea(.all)
             
-            LottieView(animation: .named("findingPeer"))
-                .playing(loopMode: .loop)
-                .ignoresSafeArea(.all)
+            if !hasDetectedDistanceChange {
+                LottieView(animation: .named("findingPeer"))
+                    .playing(loopMode: .loop)
+                    .ignoresSafeArea(.all)
+            } else {
+                LottieView(animation: .named("creatingChaap"))
+                    .playing(loopMode: .playOnce)
+                    .ignoresSafeArea(.all)
+            }
             
             VStack {
+                Spacer()
+                LottieView(animation: .named("loadingDots"))
+                    .playing(loopMode: .loop)
+                    .frame(maxWidth: 50, maxHeight: 15)
+                    
+                Spacer()
+                    .frame(height: 21)
+                Text("사용자를 찾는중")
+                    .font(.chTitle)
+                    .foregroundStyle(Color.chLabelWhitePrimary)
+                Spacer()
+                    .frame(height: 11)
+                Text("상대도 서칭중인지 확인하세요.")
+                    .font(.chPrimaryCaptionMedium)
+                    .foregroundStyle(Color(hex: "#D9D9D9"))
+                Spacer()
+                    .frame(height: 64)
                 Button {
-                    showChaapList.toggle()
+                    print("닫기 버튼 누름")
+                    dismiss()
                 } label: {
-                    Text("저장된 챱 보기")
-                        .foregroundStyle(.white)
+                    Image(.taggingCloseButton)
                 }
+                .padding(.bottom, 57)
             }
         }
         .onAppear {
             viewModel.startMPC()
+            viewModel.prepareToPlayAudio()
+            viewModel.playAudio()
         }
         .onChange(of: viewModel.mpcManager?.nearbyPeers.count) {
-            showPeerList = true
+            if viewModel.mpcManager?.nearbyPeers.count ?? 0 >= 1 {
+                showPeerList = true
+            }
         }
         .chBottomModal(isPresented: $showPeerList) {
             if let mpcManager = viewModel.mpcManager {
@@ -98,23 +129,37 @@ struct TagView: View {
             
                     HStack {
                         // TODO: Component 적용 해야 함.
-                        Button {
-                            viewModel.rejectInvitation()
-                            showInvitationAlert = false
-                        } label: {
-                            Text("거절")
-                                .font(.chTitleSemibold)
-                                .foregroundStyle(Color.chLabelWhitePrimary)
-                        }
+//                        Button {
+//                            viewModel.rejectInvitation()
+//                            showInvitationAlert = false
+//                        } label: {
+//                            Text("거절")
+//                                .font(.chTitleSemibold)
+//                                .foregroundStyle(Color.chLabelWhitePrimary)
+//                        }
+                        CHMainButton(
+                            actionType: .decline,
+                            action: {
+                                viewModel.rejectInvitation()
+                                showInvitationAlert = false
+                            }
+                        )
                         Spacer()
-                        Button {
-                            viewModel.acceptInvitation()
-                            showInvitationAlert = false
-                        } label: {
-                            Text("수락")
-                                .font(.chTitleSemibold)
-                                .foregroundStyle(Color.chLabelWhitePrimary)
-                        }
+//                        Button {
+//                            viewModel.acceptInvitation()
+//                            showInvitationAlert = false
+//                        } label: {
+//                            Text("수락")
+//                                .font(.chTitleSemibold)
+//                                .foregroundStyle(Color.chLabelWhitePrimary)
+//                        }
+                        CHMainButton(
+                            actionType: .accept,
+                            action: {
+                                viewModel.acceptInvitation()
+                                showInvitationAlert = false
+                            }
+                        )
                     }
                 }
             }
@@ -151,8 +196,14 @@ struct TagView: View {
             }
         }
         
-        .sheet(isPresented: $showChaapList) {
-            ShowChaapTestView()
+        .onChange(of: viewModel.createdChaap) { _, newChaap in
+            guard let chaap = newChaap, !pushed else {
+                print("compose로 이동 X")
+                return
+            }
+            pushed = true
+            navigationManager.push(.compose(chaap))
         }
+        .navigationBarBackButtonHidden(true)
     }
 }

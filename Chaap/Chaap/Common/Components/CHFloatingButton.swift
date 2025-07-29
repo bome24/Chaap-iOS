@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
-struct CHFloatingBtn: View {
+struct CHFloatingButton: View {
+    var didPressFloatingButton: () -> Void
+    
     var body: some View {
-        Button(action: {
-            
-        }, label: {
+        Button(action: didPressFloatingButton) {
             Image(.chaapBtn)
                 .resizable()
                 .frame(width: 33.37298, height: 31.7691)
@@ -61,10 +62,6 @@ struct CHFloatingBtn: View {
                             )
                     }
                 )
-        })
+        }
     }
-}
-
-#Preview {
-    CHFloatingBtn()
 }

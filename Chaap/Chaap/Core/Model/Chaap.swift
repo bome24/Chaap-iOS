@@ -14,24 +14,24 @@ class Chaap {
     
     /// 기본으로 생성되는 것들
     var createdAt: Date
-    var place: String? // 사용자가 수정 가능하게끔
+    var place: String // 사용자가 수정 가능하게끔
     var latitude: Double?
     var longitude: Double?
     
     /// Optional, 사용자가 입력
-    var title: String?
-    var memo: String?
+    var title: String
+    var memo: String
     var photoData: Data?
     
     /// Peer 목록
     @Relationship(deleteRule: .nullify) var peers: [Peer] = []
     
     init(createdAt: Date = Date(),
-         place: String? = nil,
+         place: String = "",
          latitude: Double? = nil,
          longitude: Double? = nil,
-         title: String? = nil,
-         memo: String? = nil,
+         title: String = "",
+         memo: String = "",
          photoData: Data? = nil,
          peers: [Peer]) {
         

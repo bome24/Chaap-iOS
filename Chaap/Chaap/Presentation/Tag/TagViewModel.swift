@@ -10,12 +10,14 @@ import MultipeerConnectivity
 import NearbyInteraction
 import SwiftUI
 import SwiftData
+import AVFoundation
 
 @MainActor
 @Observable
 class TagViewModel: NSObject {
     var hasCreatedChaap = false
     let modelContext: ModelContext
+    var createdChaap: Chaap?
     
     /// LocationManager
     var locationManager = TagLocationManager.shared
@@ -34,6 +36,9 @@ class TagViewModel: NSObject {
     
     var distance: Float? // Peer 간의 거리
     let nearbyDistanceThreshold: Float = 0.2 // 태깅 범위
+    
+    // Audio
+    var player: AVAudioPlayer?
     
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
@@ -180,18 +185,21 @@ class TagViewModel: NSObject {
         return distance < nearbyDistanceThreshold
     }
     
-    func createChaap(peerToken: NIDiscoveryToken) async {
+    func createChaap(peerToken: NIDiscoveryToken) async -> Chaap? {
         print("➡️ createChaap 호출됨")
         
         guard let location = locationManager.currentLocation else {
             print("❌ 위치 없음")
-            return
+            return nil
         }
 
         await locationManager.reverseGeocode(location: location)
 
         // Peer 생성
-        let peer = getOrCreatePeer(for: peerToken, displayName: connectedPeer?.displayName ?? "Unknown")
+        guard let displayName = connectedPeer?.displayName else {
+            return nil
+        }
+        let peer = getOrCreatePeer(for: peerToken, displayName: displayName)
         
         let chaap = Chaap(
             createdAt: Date(),
@@ -205,8 +213,10 @@ class TagViewModel: NSObject {
             modelContext.insert(chaap)
             try modelContext.save()
             print("✅ Chaap 저장 성공")
+            return chaap
         } catch {
             print("❌ Chaap 저장 실패: \(error.localizedDescription)")
+            return nil
         }
     }
     
@@ -249,40 +259,41 @@ class TagViewModel: NSObject {
 extension TagViewModel: NISessionDelegate {
     nonisolated func session(_ session: NISession, didUpdate nearbyObjects: [NINearbyObject]) {
 //        print("➡️ didUpdate called with \(nearbyObjects.count) objects")
+        guard let peerToken = peerDiscoveryToken else {
+//            fatalError("don't have peer token")
+            return
+        }
         
-        Task { @MainActor in
-            guard let peerToken = peerDiscoveryToken else {
-                fatalError("don't have peer token")
-            }
-            
-//            guard let peerToken = peerDiscoveryToken else {
-//                print("⚠️ peerToken이 아직 설정되지 않음")
-//                return
-//            }
-            
-            /// discoveryToken을 사용해서 peer 확인
-            let peerObj = nearbyObjects.first { (obj) -> Bool in
-                return obj.discoveryToken == peerToken
-            }
-
+//        guard let peerToken = peerDiscoveryToken else {
+//            print("⚠️ peerToken이 아직 설정되지 않음")
+//            return
+//        }
+        
+        /// discoveryToken을 사용해서 peer 확인
+        let peerObj = nearbyObjects.first { (obj) -> Bool in
+            return obj.discoveryToken == peerToken
+        }
             guard let nearbyObjectUpdate = peerObj else {
                 return
             }
-            
-            self.distance = nearbyObjectUpdate.distance
-            
-            if let distance = nearbyObjectUpdate.distance {
-                self.distance = distance
-                
-                if isNearby(distance), !hasCreatedChaap {
-                    hasCreatedChaap = true
-                    Task {
-                        await createChaap(peerToken: peerToken)
-                        stopNI()
-                        stopMPC()
-                        resetSessionState()
+            if isNearby(distance), !hasCreatedChaap {
+                hasCreatedChaap = true
+                Task {
+//                    await createChaap(peerToken: peerToken)
+//                    stopNI()
+//                    stopMPC()
+//                    resetSessionState()
+                    if let chaap = await createChaap(peerToken: peerToken) {
+//                        await MainActor.run {
+                            self.createdChaap = chaap
+                            stopNI()
+                            stopMPC()
+                            resetSessionState()
+//                        }
                     }
                 }
+                
+                
             }
         }
     }
@@ -380,3 +391,23 @@ extension TagViewModel: NISessionDelegate {
     }
 }
 
+extension TagViewModel {
+    func prepareToPlayAudio() {
+        guard let url = Bundle.main.url(forResource: "activesound", withExtension: "wav") else { return }
+        
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
+            try AVAudioSession.sharedInstance().setActive(true) // 오디오 세션 활성화. 앱이 백그라운드로 이동하거나 중단되었을 때, 다시 활성화해야함
+            
+            player = try AVAudioPlayer(contentsOf: url)
+            player?.prepareToPlay()
+        } catch {
+            print("Error loading audio: \(error)")
+        }
+    }
+    
+    func playAudio() {
+        guard let player else { return }
+        player.play()
+    }
+}

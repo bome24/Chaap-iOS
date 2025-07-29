@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct CHNavBar: View {
+    @Binding var selectedImageName: String?
+    var didPressSearchButton: () -> Void
+    var didPressProfileButton: () -> Void
+    
     var body: some View {
         HStack(spacing: 9) {
             Spacer()
@@ -19,7 +23,7 @@ struct CHNavBar: View {
     // MARK: - Search Button
     var searchButton: some View {
         Button(action: {
-            
+            didPressSearchButton()
         }, label: {
             // TODO: 색 조정 필요
             Image(systemName: "magnifyingglass")
@@ -40,16 +44,13 @@ struct CHNavBar: View {
     // MARK: - Profile Button
     var profileButton: some View {
         Button(action: {
-            
+            didPressProfileButton()
         }, label: {
-            Circle()
-                .foregroundStyle(.white)
+            Image(selectedImageName)
+                .resizable()
+                .scaledToFill()
                 .frame(width: 40, height: 40)
                 .clipShape(Circle())
         })
     }
-}
-
-#Preview {
-    CHNavBar()
 }

@@ -11,82 +11,152 @@ struct ProfileView: View {
     @Bindable var viewModel = ProfileViewModel()
     @State private var shouldNavigateToHome = false
     
+    @State private var showImagePicker = false
+    @State private var selectedImageName: String? = nil
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 /// 상단 네비게이션
-                VStack(alignment: .leading, spacing: 0) {
-                    ZStack {
-                        /// 중앙 타이틀
-                        Text("Chaap")
-                            .font(.systemEmphasized)
-                            .foregroundColor(.chLabelBlackPrimary)
-                        
-                        /// 오른쪽(다음) 버튼
-                        HStack {
-                            Spacer()
-                            Button("다음") {
-                                viewModel.saveNickname()
-                                shouldNavigateToHome = true
-                                // TODO: 연결
-                            }
-                            .font(.chPrimaryCaptionMedium)
-                            .foregroundColor(viewModel.isNextButtonEnabled ? .chLabelBlackPrimary : .chLabelBlackSecondary)
-                            .disabled(!viewModel.isNextButtonEnabled)
-                        }
-                    }
-                }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 29)
+                topNavigation
                 
                 /// 메인 컨텐츠
                 VStack(spacing: 50) {
                     /// 프로필 사진
-                    ZStack {
-                        Circle()
-                            .frame(width: 111, height: 111)
-                            .foregroundColor(
-                                Color(red: 0.82, green: 0.82, blue: 0.82).opacity(0.5)
-                            )
-                        
-                        Image(systemName: "person.fill")
-                            .font(.system(size: 40))
-                            .foregroundColor(.black.opacity(0.6))
-                    }
+                    chooseProfileImage
                     
                     /// 닉네임 섹션
-                    VStack(alignment: .leading, spacing: 12) {
-                        /// 닉네임 레이블
-                        HStack {
-                            Text("닉네임")
-                                .font(.chPrimaryCaptionMedium)
-                                .foregroundColor(.black)
-                            Spacer()
-                        }
-                        
-                        /// 닉네임 입력란
-                        ZStack(alignment: .leading) {
-                            Rectangle()
-                                .foregroundColor(.clear)
-                                .frame(height: 52)
-                                .background(.black.opacity(0.05))
-                                .cornerRadius(100)
-                            
-                            TextField("닉네임을 입력해주세요.", text: $viewModel.nickname)
-                                .font(.chPrimaryCaptionRegular)
-                                .foregroundColor(.black)
-                                .padding(.horizontal, 20)
-                                .frame(height: 52)
-                                .background(.black.opacity(0.05))
-                                .cornerRadius(100)
-                        }
-                    }
-                    .padding(.horizontal, 30)
+                    nicknameField
                 }
                 Spacer()
             }
-            .background(Color.clear)
         }
+    }
+    
+    var topNavigation: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            ZStack {
+                /// 중앙 타이틀
+                Text("Chaap")
+                    .font(.systemEmphasized)
+                    .foregroundColor(.chLabelBlackPrimary)
+                
+                /// 오른쪽(다음) 버튼
+                HStack {
+                    Spacer()
+                    Button("다음") {
+                        viewModel.saveNickname()
+                        shouldNavigateToHome = true
+                        // TODO: 연결
+                    }
+                    .font(.chPrimaryCaptionMedium)
+                    .foregroundColor(viewModel.isNextButtonEnabled ? .chLabelBlackPrimary : .chLabelBlackSecondary)
+                    .disabled(!viewModel.isNextButtonEnabled)
+                }
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 29)
+    }
+    
+    // MARK: - choose profile image
+    var chooseProfileImage: some View {
+        ZStack {
+            Circle()
+                .frame(width: 111, height: 111)
+                .foregroundColor(Color.chLabelWhitePrimary)
+                .shadow(color: .black.opacity(0.1), radius: 2.5, x: 3, y: 3)
+            
+            if let selectedImageName {
+                Image(selectedImageName)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 55, height: 55)
+            } else {
+                Image(.profileButterfly)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 55, height: 55)
+            }
+        }
+        .onTapGesture {
+            showImagePicker = true
+        }
+        .sheet(isPresented: $showImagePicker) {
+            VStack(spacing: 20) {
+                Text("프로필 이미지 선택")
+                    .font(.headline)
+                
+                imageOption
+            }
+            .padding()
+            .presentationDetents([.medium])
+            .presentationDragIndicator(.visible)
+        }
+    }
+    
+    // MARK: - Image Option Sheet
+    var imageOption: some View {
+        let imageNames = [
+            "profileBird",
+            "profileCat",
+            "profileDog",
+            "profileRabbit",
+            "profileTurtle"
+        ]
+        
+        return LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 50), count: 3), spacing: 20) {
+            ForEach(imageNames, id: \.self) { imageName in
+                ZStack {
+                    Circle()
+                        .frame(width: 111, height: 111)
+                        .foregroundColor(Color.chLabelWhitePrimary)
+                        .shadow(color: .black.opacity(0.1), radius: 2.5, x: 3, y: 3)
+                        .shadow(color: .black.opacity(0.1), radius: 2.5, x: 3, y: 3)
+                        .onTapGesture {
+                            selectedImageName = imageName
+                            showImagePicker = false
+                        }
+                    
+                    Image(imageName)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 45, height: 45)
+                }
+            }
+        }
+        .padding()
+    }
+    
+    // MARK: Nickname Section
+    var nicknameField: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            /// 닉네임 레이블
+            HStack {
+                Text("닉네임")
+                    .font(.chPrimaryCaptionMedium)
+                    .foregroundColor(.black)
+                Spacer()
+            }
+            
+            /// 닉네임 입력란
+            ZStack(alignment: .leading) {
+                Rectangle()
+                    .foregroundColor(.clear)
+                    .frame(height: 52)
+                    .background(.black.opacity(0.05))
+                    .cornerRadius(100)
+                
+                TextField("닉네임을 입력해주세요.", text: $viewModel.nickname)
+                    .font(.chPrimaryCaptionRegular)
+                    .foregroundColor(.black)
+                    .padding(.horizontal, 20)
+                    .frame(height: 52)
+                    .background(.black.opacity(0.05))
+                    .cornerRadius(100)
+            }
+        }
+        .padding(.horizontal, 30)
     }
 }
 
