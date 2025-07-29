@@ -12,6 +12,8 @@ struct MainView: View {
     @StateObject private var navigationManager = CHNavigationManager()
     @Environment(\.modelContext) private var modelContext
     
+    @State private var selectedImageName: String? = UserDefaults.standard.string(forKey: "SelectedProfileImageName")
+    
     var body: some View {
         NavigationStack(path: $navigationManager.appRoutes) {
             ZStack {
@@ -35,11 +37,13 @@ struct MainView: View {
                 
                 // Top Bar
                 VStack(alignment: .center, spacing: 15) {
-                    CHNavBar(didPressSearchButton: {
-                        navigationManager.push(.search)
-                    }, didPressProfileButton: {
-                        navigationManager.push(.editProfile)
-                    })
+                    CHNavBar(
+                        selectedImageName: $selectedImageName,
+                        didPressSearchButton: {
+                            navigationManager.push(.search)
+                        }, didPressProfileButton: {
+                            navigationManager.push(.editProfile)
+                        })
                     SegmentControlPicker(selected: $viewModel.selectedSegement)
                     Spacer()
                 }
