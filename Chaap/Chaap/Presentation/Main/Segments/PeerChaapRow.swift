@@ -23,14 +23,30 @@ struct PeerChaapRow: View {
                 .overlay(
                     // 나비 아이콘 또는 사람 이름 첫 글자
                     Group {
-                        if let firstPeer = chaap.peers.first {
-                            Text(String(firstPeer.displayName.prefix(1)).uppercased())
-                                .font(.system(size: 16, weight: .medium))
-                                .foregroundColor(.black)
+                        if let iconName = chaap.peers.first?.iconName {
+                            Image(iconName)
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .frame(
+                                    maxWidth: .infinity,
+                                    minHeight: 44,
+                                    maxHeight: 44,
+                                    alignment: .center
+                                )
+                                .background(.white)
+                                .clipShape(Circle())
                         } else {
-                            Image(systemName: "person.fill")
-                                .font(.system(size: 16))
-                                .foregroundColor(.gray)
+                            Image(.profileButterfly)
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .frame(
+                                    maxWidth: .infinity,
+                                    minHeight: 44,
+                                    maxHeight: 44,
+                                    alignment: .center
+                                )
+                                .background(.white)
+                                .clipShape(Circle())
                         }
                     }
                 )
