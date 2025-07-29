@@ -6,12 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MainView: View {
     @StateObject private var viewModel = SegmentsViewModel()
     @StateObject private var navigationManager = CHNavigationManager()
     @Environment(\.modelContext) private var modelContext
-    
     @AppStorage("SelectedProfileImageName") private var selectedImageName: String?
 
     var body: some View {
@@ -89,7 +89,7 @@ struct MainView: View {
         case .peopleSegment:
             PeopleSegmentView()
         case .calendarSegment:
-            CalendarSegmentView()
+            CalendarSegmentView(modelContext: modelContext)
         case .mapSegment:
             MapSegmentView()
         }
