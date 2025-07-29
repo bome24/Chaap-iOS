@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct CHNavBar: View {
+    @Binding var selectedImageName: String?
+    
     var body: some View {
         HStack(spacing: 9) {
             Spacer()
@@ -42,8 +44,9 @@ struct CHNavBar: View {
         Button(action: {
             
         }, label: {
-            Circle()
-                .foregroundStyle(.white)
+            Image(selectedImageName)
+                .resizable()
+                .scaledToFill()
                 .frame(width: 40, height: 40)
                 .clipShape(Circle())
         })
