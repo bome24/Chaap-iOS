@@ -19,7 +19,8 @@ struct MapSegmentView: View {
     @Namespace var mapScope
     
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
+        ZStack {
+            Color.black.ignoresSafeArea()
             Map(position: $viewModel.cameraPosition) {
                 ForEach(viewModel.markers, id: \.id, content: { marker in
                     Annotation(marker.title, coordinate: marker.coordinate, content: {
@@ -44,6 +45,8 @@ struct MapSegmentView: View {
                 UserAnnotation(anchor: .center)
             }
         }
+        .ignoresSafeArea(.container, edges: .top)
+        .navigationBarHidden(true)
         .task {
             viewModel.loadMarkers(from: chaaps)
         }
