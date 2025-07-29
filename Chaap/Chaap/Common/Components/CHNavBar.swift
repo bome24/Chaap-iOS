@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CHNavBar: View {
+    @Binding var selectedImageName: String?
     var didPressSearchButton: () -> Void
     var didPressProfileButton: () -> Void
     
@@ -45,8 +46,9 @@ struct CHNavBar: View {
         Button(action: {
             didPressProfileButton()
         }, label: {
-            Circle()
-                .foregroundStyle(.white)
+            Image(selectedImageName)
+                .resizable()
+                .scaledToFill()
                 .frame(width: 40, height: 40)
                 .clipShape(Circle())
         })
