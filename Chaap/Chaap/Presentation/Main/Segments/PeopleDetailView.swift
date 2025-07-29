@@ -75,7 +75,7 @@ struct PeopleDetailView: View {
                 }
                 Spacer()
 
-                CHNavBar()
+//                CHNavBar()
             }
         }
         .padding(.bottom, 10)
