@@ -42,7 +42,7 @@ struct SearchBar: View {
                     
                     ZStack(alignment: .leading) {
                         if text.isEmpty{
-                            Text("사람, 장소, 내용 등")
+                            Text("제목, 내용, 장소 등")
                                 .font(.chPrimaryCaptionMedium)
                                 .foregroundStyle(Color.chLabelBlackSecondary)
                         }

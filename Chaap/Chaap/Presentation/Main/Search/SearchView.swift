@@ -24,10 +24,6 @@ struct SearchView: View {
             .safeAreaPadding(.horizontal, 16)
             .safeAreaPadding(.top, 9)
         }
-        //화면 터치시 키보드 숨김
-        .onTapGesture {
-            hideKeyboard()
-        }
         .navigationBarBackButtonHidden()
     }
     
@@ -36,7 +32,7 @@ struct SearchView: View {
         if searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             return allChaaps
         } else {
-            return allChaaps.filter { (($0.peers.first?.displayName.localizedCaseInsensitiveContains(searchText)) != nil) ||
+            return allChaaps.filter { 
                 $0.title.localizedCaseInsensitiveContains(searchText) ||
                 $0.memo.localizedCaseInsensitiveContains(searchText) ||
                 $0.place.localizedCaseInsensitiveContains(searchText)
@@ -49,70 +45,59 @@ struct SearchView: View {
         ScrollView {
             LazyVStack(spacing: 16) {
                 ForEach(filteredChaaps, id: \.id) { chaap in
-                    HStack(spacing: 16) {
-                        // 상대 프로필 이미지
-                        if let iconName = chaap.peers.first?.iconName {
-                            Image(iconName)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .frame(width: 44, height: 44)
-                                .background(.white)
-                                .clipShape(Circle())
-                                .shadow(color: .black.opacity(0.1), radius: 3, x: 1.5, y: 1.5)
-                                .shadow(color: .black.opacity(0.05), radius: 1.2, x: 3, y: 3)
+                    Button {
+                        if chaap.isEditable {
+                            navigationManager.push(.compose(chaap))
+                        } else {
+                            navigationManager.push(.detail(chaap))
                         }
-                        
-                        VStack(alignment: .leading) {
-                            Text(chaap.peers.first?.displayName ?? "이름 없음")
-                                .font(.chSecondaryCaptionMedium)
-                                .foregroundStyle(Color.chLabelBlackSecondary)
-                            
-                            Spacer()
-                            
-                            Text(chaap.title)
-                                .font(.chBodyRegular)
-                                .foregroundStyle(Color.chLabelBlackPrimary)
-                        }
-                        
-                        Spacer()
-                        
-                        VStack(alignment: .trailing) {
-                            Text(chaap.createdAt.formatted(date: .abbreviated, time: .shortened))
-                                .font(.chSecondaryCaptionMedium)
-                                .foregroundStyle(Color.chLabelBlackSecondary)
-                            
-                            Spacer()
-                            
-                            Text(chaap.place)
-                                .font(.chSecondaryCaptionMedium)
-                                .foregroundStyle(Color.chLabelBlackSecondary)
-                            
-                            Spacer()
-                        }
-                    }
-                    .frame(height: 46)
-                    .padding(.vertical, 8)
-                    .gesture(
-                        TapGesture()
-                            .onEnded { _ in
-                                navigationManager.push(.detail(chaap))
+                    } label: {
+                        HStack(spacing: 16) {
+                            // 상대 프로필 이미지
+                            if let iconName = chaap.peers.first?.iconName {
+                                Image(iconName)
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                                    .frame(width: 44, height: 44)
+                                    .background(.white)
+                                    .clipShape(Circle())
+                                    .shadow(color: .black.opacity(0.1), radius: 3, x: 1.5, y: 1.5)
+                                    .shadow(color: .black.opacity(0.05), radius: 1.2, x: 3, y: 3)
                             }
-                    )
+                            
+                            VStack(alignment: .leading) {
+                                Text(chaap.peers.first?.displayName ?? "이름 없음")
+                                    .font(.chSecondaryCaptionMedium)
+                                    .foregroundStyle(Color.chLabelBlackSecondary)
+                                
+                                Spacer()
+                                
+                                Text(chaap.title)
+                                    .font(.chBodyRegular)
+                                    .foregroundStyle(Color.chLabelBlackPrimary)
+                            }
+                            
+                            Spacer()
+                            
+                            VStack(alignment: .trailing) {
+                                Text(chaap.createdAt.formatted(date: .abbreviated, time: .shortened))
+                                    .font(.chSecondaryCaptionMedium)
+                                    .foregroundStyle(Color.chLabelBlackSecondary)
+                                
+                                Spacer()
+                                
+                                Text(chaap.place)
+                                    .font(.chSecondaryCaptionMedium)
+                                    .foregroundStyle(Color.chLabelBlackSecondary)
+                                
+                                Spacer()
+                            }
+                        }
+                        .frame(height: 46)
+                        .padding(.vertical, 8)
+                    }
                 }
             }
         }
     }
-}
-
-//화면 터치시 키보드 숨김
-#if canImport(UIKit)
-extension View {
-    func hideKeyboard() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-    }
-}
-#endif
-
-#Preview {
-    SearchView()
 }
