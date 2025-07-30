@@ -36,7 +36,7 @@ struct SearchView: View {
         if searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             return allChaaps
         } else {
-            return allChaaps.filter { (($0.peers.first?.displayName.localizedCaseInsensitiveContains(searchText)) != nil) ||
+            return allChaaps.filter { 
                 $0.title.localizedCaseInsensitiveContains(searchText) ||
                 $0.memo.localizedCaseInsensitiveContains(searchText) ||
                 $0.place.localizedCaseInsensitiveContains(searchText)
@@ -112,7 +112,3 @@ extension View {
     }
 }
 #endif
-
-#Preview {
-    SearchView()
-}
