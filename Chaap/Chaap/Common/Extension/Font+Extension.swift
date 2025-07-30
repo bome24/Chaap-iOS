@@ -72,6 +72,10 @@ extension Font {
         return .pretend(type: .regular, size: 11)
     }
     
+    static var chSecondaryCaptionMedium: Font {
+        return .pretend(type: .medium, size: 11)
+    }
+    
     static var systemEmphasized: Font {
         return .system(size: 17, weight: .semibold)
     }

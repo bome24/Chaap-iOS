@@ -20,47 +20,18 @@ struct CalendarSegmentView: View {
     }
 
     var body: some View {
-        ZStack {
-            /// 전체화면 배경
-//            Rectangle()
-//                .foregroundColor(.clear)
-//                .background(.black.opacity(0.05))
-//                .background(
-//                    EllipticalGradient(
-//                        colors: [Color.chPrimary, Color.chSecondary],
-//                        center: .topLeading,
-//                        startRadiusFraction: 0.2,
-//                        endRadiusFraction: 1.0
-//                    )
-//                    .scaleEffect(x: 1.6, y: 1.0, anchor: .topLeading)
-//                )
-//                .ignoresSafeArea(.all)
-
-            VStack(spacing: 0) {
-                Spacer()
-                
-                ZStack {
-                    CHCalendarBG(bottomExtension: -255)
-                    
-                    VStack(alignment: .center, spacing: 16) {
-                        monthHeader
-
-                        VStack(alignment: .leading, spacing: 5) {
-                            weekdayHeader
-                            calendarGrid
-                        }
-                        .frame(maxWidth: .infinity, alignment: .topLeading)
-                        Spacer()
-                    }
-                    .padding(.horizontal, -19)
-                    .padding(.vertical, 24)
-                }
-                .padding(.horizontal, 24)
-
-                Spacer()
-            }
-            .safeAreaPadding(.top, 144)
+       VStack {
+           VStack(spacing: 24) {
+               monthHeader
+               weekdayHeader
+               calendarGrid
+           }
+           .padding(.vertical, 24)
+           .background(CHCardBG())
+           Spacer()
         }
+        .safeAreaPadding(.horizontal, 24)
+        .safeAreaPadding(.top, 144)
         .modifier(CHBottomModalModifier(
             isPresented: $isModalPresented,
             minHeight: 200,
@@ -77,48 +48,40 @@ struct CalendarSegmentView: View {
     }
     
     private var monthHeader: some View {
-        HStack {
-            Spacer()
-
-            HStack(spacing: 0) {
-                Button {
-                    viewModel.previousMonthWasTapped()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(Color(hex: "#919191"))
-                        .font(.system(size: 16, weight: .medium))
-                }
-                .disabled(!viewModel.canNavigateMonth(-1))
-
-                Spacer()
-
-                Text(
-                    viewModel.monthYearFormatter.string(from: viewModel.currentMonth)
-                )
-                .font(.chBodyBold)
-                .foregroundColor(.white)
-
-                Spacer()
-
-                Button {
-                    viewModel.nextMonthWasTapped()
-                } label: {
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(Color(hex: "#919191"))
-                        .font(.system(size: 16, weight: .medium))
-                }
-                .disabled(!viewModel.canNavigateMonth(1))
+        HStack(spacing: 0) {
+            Button {
+                viewModel.previousMonthWasTapped()
+            } label: {
+                Image(systemName: "chevron.left")
+                    .foregroundColor(Color(hex: "#919191"))
+                    .font(.system(size: 16, weight: .medium))
             }
-            .frame(width: 160, height: 25)
-
+            .disabled(!viewModel.canNavigateMonth(-1))
+            
             Spacer()
+            
+            Text(
+                viewModel.monthYearFormatter.string(from: viewModel.currentMonth)
+            )
+            .font(.chBodyBold)
+            .foregroundColor(.white)
+            
+            Spacer()
+            
+            Button {
+                viewModel.nextMonthWasTapped()
+            } label: {
+                Image(systemName: "chevron.right")
+                    .foregroundColor(Color(hex: "#919191"))
+                    .font(.system(size: 16, weight: .medium))
+            }
+            .disabled(!viewModel.canNavigateMonth(1))
         }
-        .padding(0)
-        .frame(width: 160, alignment: .center)
+        .frame(width: 160, height: 25)
     }
     
     private var weekdayHeader: some View {
-        HStack(alignment: .center) {
+        HStack(alignment: .center, spacing: -35) {
             ForEach(viewModel.weekdays, id: \.self) { weekday in
                 Spacer()
                 Text(weekday)
@@ -127,31 +90,23 @@ struct CalendarSegmentView: View {
                 Spacer()
             }
         }
-        .padding(.horizontal, 16)
-        .frame(
-            maxWidth: .infinity,
-            minHeight: 36,
-            maxHeight: 36,
-            alignment: .center
-        )
     }
     
     private var calendarGrid: some View {
-        VStack(alignment: .center, spacing: 5) {
-            ForEach(0..<6, id: \.self) { week in
-                HStack(alignment: .center) {
+        let rowCount = Int(ceil(Double(viewModel.daysInMonth.count) / 7.0))
+
+        return VStack(alignment: .center, spacing: 20) {
+            ForEach(0..<rowCount, id: \.self) { week in
+                HStack(alignment: .center, spacing: -35) {
                     ForEach(0..<7, id: \.self) { day in
                         Spacer()
                         let index = week * 7 + day
                         if index < viewModel.daysInMonth.count {
                             dayCell(date: viewModel.daysInMonth[index])
-                        } else {
-                            Spacer()
                         }
                         Spacer()
                     }
                 }
-                .padding(.horizontal, 16)
                 .frame(
                     maxWidth: .infinity,
                     minHeight: 36,
