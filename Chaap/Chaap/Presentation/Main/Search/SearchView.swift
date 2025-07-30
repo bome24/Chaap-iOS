@@ -93,7 +93,7 @@ struct SearchView: View {
                     .gesture(
                         TapGesture()
                             .onEnded { _ in
-                                navigationManager.push(.compose(chaap))
+                                navigationManager.push(.detail(chaap))
                             }
                     )
                 }

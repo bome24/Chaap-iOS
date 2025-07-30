@@ -80,6 +80,9 @@ struct MainView: View {
                 case .compose(let chaap):
                     ChaapComposeView(chaap: chaap)
                         .environmentObject(navigationManager)
+                case .detail(let chaap):
+                    ChaapDetailView(chaap: chaap)
+                        .environmentObject(navigationManager)
                 }
                 
             }
