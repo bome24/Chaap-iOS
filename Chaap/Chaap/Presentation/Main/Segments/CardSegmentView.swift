@@ -77,7 +77,11 @@ struct CardSegmentView: View {
                                 .gesture(
                                     TapGesture()
                                         .onEnded { _ in
-                                            navigationManager.push(.compose(chaap))
+                                            if chaap.isEditable {
+                                                navigationManager.push(.compose(chaap))
+                                            } else {
+                                                navigationManager.push(.detail(chaap))
+                                            }
                                         }
                                 )
                         }

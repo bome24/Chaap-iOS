@@ -178,7 +178,11 @@ struct CalendarSegmentView: View {
                 VStack(spacing: 0) {
                     ForEach(viewModel.eventsForSelectedDate, id: \.id) { chaap in
                         Button {
-                            navigationManager.push(.detail(chaap))
+                            if chaap.isEditable {
+                                navigationManager.push(.compose(chaap))
+                            } else {
+                                navigationManager.push(.detail(chaap))
+                            }
                         } label: {
                             PeerChaapRow(chaap: chaap)
                                 .padding(.horizontal, 4)

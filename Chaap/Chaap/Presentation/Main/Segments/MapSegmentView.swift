@@ -58,7 +58,11 @@ struct MapSegmentView: View {
                     VStack(spacing: 0) {
                         ForEach(chaaps) { chaap in
                             Button {
-                                navigationManager.push(.detail(chaap))
+                                if chaap.isEditable {
+                                    navigationManager.push(.compose(chaap))
+                                } else {
+                                    navigationManager.push(.detail(chaap))
+                                }
                             } label: {
                                 PeerChaapRow(chaap: chaap)
                                     .padding(.horizontal, 4)
