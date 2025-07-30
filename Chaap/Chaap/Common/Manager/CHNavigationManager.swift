@@ -14,6 +14,7 @@ enum CHAppRoute: Hashable {
     case tag
     case compose(Chaap)
     case detail(Chaap)
+    case people(String, [Peer])
 }
 
 class CHNavigationManager: ObservableObject {
