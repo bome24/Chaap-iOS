@@ -13,6 +13,8 @@ struct SearchView: View {
     
     @Query(sort: [SortDescriptor(\Chaap.createdAt, order: .reverse)]) private var allChaaps: [Chaap]
     
+    @EnvironmentObject private var navigationManager: CHNavigationManager
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 33) {
@@ -88,6 +90,12 @@ struct SearchView: View {
                     }
                     .frame(height: 25)
                     .padding(.vertical, 8)
+                    .gesture(
+                        TapGesture()
+                            .onEnded { _ in
+                                navigationManager.push(.compose(chaap))
+                            }
+                    )
                 }
             }
         }
