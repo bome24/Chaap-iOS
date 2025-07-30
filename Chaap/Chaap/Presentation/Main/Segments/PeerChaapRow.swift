@@ -55,7 +55,7 @@ struct PeerChaapRow: View {
                 // 사람 이름
                 if !chaap.peers.isEmpty {
                     Text(chaap.peers.map { $0.displayName }.joined(separator: ", "))
-                        .font(.chSecondaryCaptionRegular)
+                        .font(.chSecondaryCaptionMedium)
                         .foregroundStyle(Color.chLabelWhiteSecondary)
                 }
                 
@@ -79,13 +79,13 @@ struct PeerChaapRow: View {
             VStack(alignment: .trailing, spacing: 4) {
                 // 날짜 시간
                 Text(formatDateTime(chaap.createdAt))
-                    .font(.chSecondaryCaptionRegular)
+                    .font(.chSecondaryCaptionMedium)
                     .foregroundStyle(Color.chLabelWhiteSecondary)
                 
                 // 장소
 //                if let place = chaap.place, !place.isEmpty {
                 Text(chaap.place)
-                        .font(.chSecondaryCaptionRegular)
+                        .font(.chSecondaryCaptionMedium)
                         .foregroundStyle(Color.chLabelWhiteSecondary)
                         .lineLimit(1)
 //                } else {
