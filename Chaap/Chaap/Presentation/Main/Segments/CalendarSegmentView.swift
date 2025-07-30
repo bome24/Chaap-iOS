@@ -81,7 +81,7 @@ struct CalendarSegmentView: View {
     }
     
     private var weekdayHeader: some View {
-        HStack(alignment: .center, spacing: -20) {
+        HStack(alignment: .center, spacing: -35) {
             ForEach(viewModel.weekdays, id: \.self) { weekday in
                 Spacer()
                 Text(weekday)
@@ -97,7 +97,7 @@ struct CalendarSegmentView: View {
 
         return VStack(alignment: .center, spacing: 20) {
             ForEach(0..<rowCount, id: \.self) { week in
-                HStack(alignment: .center, spacing: -20) {
+                HStack(alignment: .center, spacing: -35) {
                     ForEach(0..<7, id: \.self) { day in
                         Spacer()
                         let index = week * 7 + day
