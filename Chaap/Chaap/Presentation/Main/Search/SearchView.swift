@@ -86,9 +86,11 @@ struct SearchView: View {
                             Text(chaap.place)
                                 .font(.chSecondaryCaptionMedium)
                                 .foregroundStyle(Color.chLabelBlackSecondary)
+                            
+                            Spacer()
                         }
                     }
-                    .frame(height: 25)
+                    .frame(height: 46)
                     .padding(.vertical, 8)
                     .gesture(
                         TapGesture()
