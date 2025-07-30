@@ -101,7 +101,11 @@ struct PeopleDetailView: View {
             HStack(spacing: 13) {
                 ForEach(filteredChaaps.indices, id: \.self) { index in
                     Button {
-                        navigationManager.push(.detail(filteredChaaps[index]))
+                        if filteredChaaps[index].isEditable {
+                            navigationManager.push(.compose(filteredChaaps[index]))
+                        } else {
+                            navigationManager.push(.detail(filteredChaaps[index]))
+                        }
                     } label: {
                         CHCardShow(chaap: filteredChaaps[index])
                             .frame(width: 319, height: 389)
