@@ -73,6 +73,8 @@ struct TagView: View {
                     .frame(height: 64)
                 Button {
                     print("닫기 버튼 누름")
+                    viewModel.stopNI()
+                    viewModel.stopMPC()
                     dismiss()
                 } label: {
                     Image(.taggingCloseButton)
