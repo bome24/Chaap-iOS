@@ -72,7 +72,9 @@ struct PeopleDetailView: View {
             
             HStack {
                 /// Back button
-                Button(action: backTapped) {
+                Button {
+                    dismiss()
+                } label: {
                     CHCircleButton(buttonImageName: "chevron.backward")
                 }
                 Spacer()
@@ -121,10 +123,5 @@ struct PeopleDetailView: View {
         .scrollPosition(id: $currentIndex)
         .contentMargins(.horizontal, (UIScreen.main.bounds.width - cardWidth) / 2, for: .scrollContent)
         
-    }
-    
-    // TODO: 네비게이션 연결 방식에 따라 변경
-    private func backTapped() {
-        presentationMode.wrappedValue.dismiss()
     }
 }
