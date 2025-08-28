@@ -73,12 +73,7 @@ struct PeopleDetailView: View {
             HStack {
                 /// Back button
                 Button(action: backTapped) {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 20))
-                        .foregroundColor(.white)
-                        .frame(width: 40, height: 40)
-                        .background(Color.black.opacity(0.4))
-                        .clipShape(Circle())
+                    CHBackButton()
                 }
                 Spacer()
 
