@@ -73,7 +73,7 @@ struct PeopleDetailView: View {
             HStack {
                 /// Back button
                 Button(action: backTapped) {
-                    CHBackButton()
+                    CHCircleButton(buttonImageName: "chevron.backward")
                 }
                 Spacer()
 
