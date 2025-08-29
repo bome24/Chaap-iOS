@@ -271,7 +271,6 @@ struct ChaapComposeView: View {
                     .padding(.horizontal, 20)
                     .padding(.vertical, 24)
                 }
-                // TODO: 임의로 상수 넣었음..
                 .frame(height: 430)
                 Spacer()
                 /// 저장 버튼
