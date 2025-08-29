@@ -120,16 +120,32 @@ struct TagView: View {
         .chBottomModal(isPresented: $showInvitationPending) {
             VStack {
                 Spacer()
-                    Text("\(peerName)님의 수락을 기다리는 중")
-                        .font(.chTitle)
-                        .foregroundStyle(Color.chLabelWhitePrimary)
-                } else {
-                    Text("수락을 기다리는 중")
-                        .font(.chTitle)
-                        .foregroundStyle(Color.chLabelWhitePrimary)
+                VStack(spacing: 20) {
+                    Image(.chaapLogo)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 90)
+                    
+                    if let peerName = viewModel.mpcManager?.connectedPeer?.displayName {
+                        Text("\(peerName)의 수락을\n기다리는 중입니다.")
+                            .font(.chTitle)
+                            .foregroundStyle(Color.chLabelWhitePrimary)
+                            .multilineTextAlignment(.center)
+//                            .padding(.bottom, 20)
+                    } else {
+                        Text("수락을\n기다리는 중입니다.")
+                            .font(.chTitle)
+                            .foregroundStyle(Color.chLabelWhitePrimary)
+                            .multilineTextAlignment(.center)
+//                            .padding(.bottom, 20)
+                    }
                 }
                 Spacer()
                 LottieView(animation: .named("loadingDots"))
+                    .playing(loopMode: .loop)
+                    .frame(maxWidth: 50, maxHeight: 15)
+                    .padding(.top, 13)
+                    .padding(.bottom, 37)
             }
             .safeAreaPadding(.bottom, 23)
         }
