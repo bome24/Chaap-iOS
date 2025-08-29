@@ -181,6 +181,7 @@ struct TagView: View {
                             action: {
                                 viewModel.acceptInvitation()
                                 showInvitationAlert = false
+                                showConnecting = true
                             }
                         )
                     }
