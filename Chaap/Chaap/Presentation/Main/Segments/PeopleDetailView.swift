@@ -142,7 +142,6 @@ struct PeopleDetailView: View {
         ScrollView {
             LazyVStack(spacing: 0) {
                 ForEach(sortedChaaps, id: \.self) { chaap in
-                    
                     Button {
                         if chaap.isEditable {
                             navigationManager.push(.compose(chaap))
@@ -157,6 +156,7 @@ struct PeopleDetailView: View {
                     Rectangle()
                         .foregroundColor(.chLabelBlackTeritary)
                         .frame(height: 1)
+                        .padding(.vertical, 16)
                 }
             }
         }
@@ -209,7 +209,6 @@ struct PeopleDetailView: View {
                 Spacer()
             }
         }
-        .safeAreaPadding(.vertical, 16)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
     
