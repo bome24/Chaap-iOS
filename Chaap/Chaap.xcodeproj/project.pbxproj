@@ -280,6 +280,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Chaap/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
+				INFOPLIST_KEY_NSCameraUsageDescription = "기록에 사진을 추가하기 위해 카메라 접근이 필요합니다.";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "동일 네트워크 상의 기기와 통신하여 기능을 제공하기 위해 로컬 네트워크 접근 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치 기반 기능을 제공하기 위해 사용자의 위치 정보를 항상 또는 사용하는 동안에만 수집합니다.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "위치 기반 기능을 제공하기 위해 사용자의 위치 정보를 항상 수집합니다.";
@@ -319,6 +320,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Chaap/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
+				INFOPLIST_KEY_NSCameraUsageDescription = "기록에 사진을 추가하기 위해 카메라 접근이 필요합니다.";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "동일 네트워크 상의 기기와 통신하여 기능을 제공하기 위해 로컬 네트워크 접근 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치 기반 기능을 제공하기 위해 사용자의 위치 정보를 항상 또는 사용하는 동안에만 수집합니다.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "위치 기반 기능을 제공하기 위해 사용자의 위치 정보를 항상 수집합니다.";
