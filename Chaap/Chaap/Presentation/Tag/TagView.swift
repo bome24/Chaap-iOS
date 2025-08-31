@@ -131,32 +131,36 @@ struct TagView: View {
         .chBottomModal(isPresented: $showInvitationPending) {
             VStack {
                 Spacer()
-                VStack(spacing: 20) {
-                    Image(.chaapLogo)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 90)
-                    
+                VStack(spacing: 40) {
                     if let peerName = viewModel.mpcManager?.connectedPeer?.displayName {
-                        Text("\(peerName)의 수락을\n기다리는 중입니다.")
-                            .font(.chTitle)
-                            .lineHeight(1.4, fontSize: 24)
+                        Text(peerName)
+                            .font(.chTitle36)
+                            .lineHeight(1.4, fontSize: 36)
                             .foregroundStyle(Color.chLabelWhitePrimary)
                             .multilineTextAlignment(.center)
+                            .padding(.bottom, 10)
                     } else {
-                        Text("수락을\n기다리는 중입니다.")
-                            .font(.chTitle)
-                            .lineHeight(1.4, fontSize: 24)
+                        Text(" ")
+                            .font(.chTitle36)
+                            .lineHeight(1.4, fontSize: 36)
                             .foregroundStyle(Color.chLabelWhitePrimary)
                             .multilineTextAlignment(.center)
+                            .padding(.bottom, 10)
                     }
+                    
+                    Text("수락을 기다리는 중입니다.")
+                        .font(.chTitle)
+                        .lineHeight(1.4, fontSize: 24)
+                        .foregroundStyle(Color.chLabelWhitePrimary)
+                        .multilineTextAlignment(.center)
+                    
+                    LottieView(animation: .named("loadingDots"))
+                        .playing(loopMode: .loop)
+                        .frame(maxWidth: 50, maxHeight: 15)
+                        .padding(.top, 13)
+                        .padding(.bottom, 37)
                 }
                 Spacer()
-                LottieView(animation: .named("loadingDots"))
-                    .playing(loopMode: .loop)
-                    .frame(maxWidth: 50, maxHeight: 15)
-                    .padding(.top, 13)
-                    .padding(.bottom, 37)
             }
             .safeAreaPadding(.bottom, 23)
         }
