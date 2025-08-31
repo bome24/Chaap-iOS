@@ -168,21 +168,22 @@ struct TagView: View {
             if let peerName = viewModel.mpcManager?.pendingInvitation?.peerID.displayName {
                 VStack {
                     Spacer()
-                    VStack(spacing: 20){
-                        Image(.chaapLogo)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 90)
+                    VStack(spacing: 50){
+                        Text(peerName)
+                            .font(.chTitle36)
+                            .lineHeight(1.4, fontSize: 36)
+                            .foregroundStyle(Color.chLabelWhitePrimary)
+                            .multilineTextAlignment(.center)
+                            .padding(.bottom, 10)
                         
-                        Text("\(peerName)을 찾았습니다.\n연결하시겠습니까?")
+                        Text("연결하시겠습니까?")
                             .font(.chTitle)
                             .lineHeight(1.4, fontSize: 24)
                             .foregroundStyle(Color.chLabelWhitePrimary)
                             .multilineTextAlignment(.center)
-                            .lineLimit(2)
                     }
                     Spacer()
-                    HStack {
+                    HStack(spacing: 5) {
                         CHMainButton(
                             actionType: .decline,
                             action: {
