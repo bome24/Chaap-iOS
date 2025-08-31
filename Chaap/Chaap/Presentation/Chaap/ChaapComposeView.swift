@@ -16,6 +16,8 @@ struct ChaapComposeView: View {
     var modelContext: ModelContext
     @StateObject private var viewModel = ChaapComposeViewModel()
     
+    @FocusState private var isFocused: Bool
+    
     @State private var showDeleteAlert = false
     
     var body: some View {
@@ -88,6 +90,10 @@ struct ChaapComposeView: View {
                 chaap.photoData = data
             }
             .ignoresSafeArea()
+        }
+        .contentShape(Rectangle()) // 빈 영역도 터치 인식
+        .onTapGesture {
+            isFocused = false  // 포커스 해제 → 키보드 내려감
         }
     }
     
@@ -185,6 +191,7 @@ struct ChaapComposeView: View {
                 .disableAutocorrection(true)
                 .multilineTextAlignment(.center)
                 .tint(Color.chLabelWhitePrimary)
+                .focused($isFocused)
         }
         .frame(height: 57)
         .background(
@@ -238,7 +245,6 @@ struct ChaapComposeView: View {
                 .font(.chBodyRegular)
                 .lineHeight(1.4, fontSize: 18)
                 .foregroundStyle(Color.chLabelWhitePrimary)
-                .frame(height: 130)
                 .scrollContentBackground(.hidden)
                 .scrollDisabled(true)
                 .background(Color.clear)
@@ -247,6 +253,7 @@ struct ChaapComposeView: View {
                 .multilineTextAlignment(.center)
                 .lineLimit(3)
                 .tint(Color.chLabelWhitePrimary)
+                .focused($isFocused)
         }
         .frame(height: 136)
         .background(
@@ -304,6 +311,7 @@ struct ChaapComposeView: View {
                     .disableAutocorrection(true)
                     .multilineTextAlignment(.center)
                     .tint(Color.chLabelWhitePrimary)
+                    .focused($isFocused)
             }
             Spacer()
         }
