@@ -49,20 +49,20 @@ struct ChaapComposeView: View {
                         Color.black.opacity(0.25)
                     )
             }
-            VStack {
+            ScrollView {
+                VStack {
+                    Spacer().frame(height: 94)
+                    cardView
+                    Spacer().frame(height: 80)
+                    
+                }
+            }
+            .scrollIndicators(.hidden)
+            .safeAreaPadding(.horizontal, 16)
+            VStack(spacing: 0) {
                 topNavigationView
                 
-                ScrollView {
-                    VStack {
-                        Spacer().frame(height: 34)
-                        cardView
-                            .safeAreaPadding(.horizontal, 24)
-                        Spacer().frame(height: 80)
-                    }
-                }
-                .scrollIndicators(.hidden)
-                
-                /// 저장 버튼
+                Spacer()
                 CHMainButton(
                     actionType: .save,
                     action: {
