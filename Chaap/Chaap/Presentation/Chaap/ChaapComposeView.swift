@@ -101,6 +101,7 @@ struct ChaapComposeView: View {
                 }
             }
             .ignoresSafeArea()
+            .allowsHitTesting(false)
             
             VStack(spacing: 0) {
                 topNavigationView
