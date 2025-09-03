@@ -63,41 +63,29 @@ struct ChaapComposeView: View {
             
             VStack(spacing: 0) {
                 ZStack {
-                    if let data = chaap.photoData, let chaapImage = UIImage(data: data) {
-                        Rectangle()
-                            .fill(.white.opacity(0))
-                            .background(
-                                CHBlurView(style: .systemUltraThinMaterialDark)
-                                    .mask(
-                                        LinearGradient(colors: [.black, .black.opacity(0)], startPoint: .top, endPoint: .center)
-                                    )
-                            )
-                            .frame(height: 500)
-                    } else {
-                        Rectangle()
-                            .fill(.clear)
-                            .frame(height: 500)
-                    }
+                    Rectangle()
+                        .fill(.white.opacity(0))
+                        .background(
+                            CHBlurView(style: .systemUltraThinMaterialDark)
+                                .mask(
+                                    LinearGradient(colors: [.black, .black.opacity(0)], startPoint: .top, endPoint: .center)
+                                )
+                        )
+                        .frame(height: 500)   
                 }
                 
                 Spacer()
                 
                 ZStack {
-                    if let data = chaap.photoData, let chaapImage = UIImage(data: data) {
-                        Rectangle()
-                            .fill(.white.opacity(0))
-                            .background(
-                                CHBlurView(style: .systemUltraThinMaterialDark)
-                                    .mask(
-                                        LinearGradient(colors: [.black, .black.opacity(0)], startPoint: .center, endPoint: .top)
-                                    )
-                            )
-                            .frame(height: 120)
-                    } else {
-                        Rectangle()
-                            .fill(.clear)
-                            .frame(height: 120)
-                    }
+                    Rectangle()
+                        .fill(.white.opacity(0))
+                        .background(
+                            CHBlurView(style: .systemUltraThinMaterialDark)
+                                .mask(
+                                    LinearGradient(colors: [.black, .black.opacity(0)], startPoint: .center, endPoint: .top)
+                                )
+                        )
+                        .frame(height: 120)
                 }
             }
             .ignoresSafeArea()
