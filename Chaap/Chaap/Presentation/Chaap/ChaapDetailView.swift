@@ -59,6 +59,29 @@ struct ChaapDetailView: View {
             .safeAreaPadding(.horizontal, 40)
             
             VStack(spacing: 0) {
+                ZStack {
+                    if let data = chaap.photoData, let chaapImage = UIImage(data: data) {
+                        Rectangle()
+                            .fill(.white.opacity(0))
+                            .background(
+                                CHBlurView(style: .systemUltraThinMaterialDark)
+                                    .mask(
+                                        LinearGradient(colors: [.black, .black.opacity(0)], startPoint: .top, endPoint: .center)
+                                    )
+                            )
+                            .frame(height: 500)
+                    } else {
+                        Rectangle()
+                            .fill(.clear)
+                            .frame(height: 500)
+                    }
+                }
+                Spacer()
+            }
+            .ignoresSafeArea()
+            .allowsHitTesting(false)
+        
+            VStack(spacing: 0) {
                 topNavigationView
                 Spacer()
             }
