@@ -9,6 +9,9 @@ import SwiftUI
 
 struct CHCircleButton: View {
     var buttonImageName: String
+    var imageSize: CGFloat = 20
+    var width: CGFloat = 44
+    var height: CGFloat = 44
     
     var body: some View {
         ZStack {
@@ -33,15 +36,15 @@ struct CHCircleButton: View {
                                 .fill(LinearGradient(colors: [.white, .white.opacity(0)], startPoint: .top, endPoint: .bottom))
                         )
                 )
-                .frame(width: 44, height: 44)
+                .frame(width: width, height: height)
         
             Image(systemName: buttonImageName)
-                .font(.system(size: 20, weight: .medium))
+                .font(.system(size: imageSize, weight: .medium))
                 .foregroundStyle(Color.chLabelWhitePrimary)
         }
     }
 }
 
 #Preview {
-    CHCircleButton(buttonImageName: "chevron.backward")
+    CHCircleButton(buttonImageName: "chevron.backward", width: 44, height: 44)
 }

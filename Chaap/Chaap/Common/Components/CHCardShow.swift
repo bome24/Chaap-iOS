@@ -61,7 +61,7 @@ struct CHCardShow: View {
                 .foregroundStyle(Color.chLabelWhitePrimary)
             
             Text(chaap.createdAt.formatted(date: .abbreviated, time: .shortened))
-                .font(.caption)
+                .font(.chPrimaryCaptionRegular)
                 .foregroundStyle(Color.chLabelWhiteSecondary)
         }
     }
@@ -79,7 +79,7 @@ struct CHCardShow: View {
                 .font(.chBodyRegular)
                 .foregroundStyle(Color.chLabelWhiteSecondary)
                 .multilineTextAlignment(.center)
-                .lineLimit(3)
+                .lineLimit(5)
         }
     }
     
@@ -92,7 +92,7 @@ struct CHCardShow: View {
             
             // 위치 정보
             Text(chaap.place)
-                .font(.caption)
+                .font(.chPrimaryCaptionRegular)
                 .foregroundStyle(Color.chLabelWhiteSecondary)
         }
     }

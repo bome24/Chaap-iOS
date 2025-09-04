@@ -17,6 +17,7 @@ struct ChaapComposeView: View {
     @StateObject private var viewModel = ChaapComposeViewModel()
     
     @FocusState private var isFocused: Bool
+    @FocusState private var isMemoFocused: Bool
     
     @State private var showDeleteAlert = false
     
@@ -71,6 +72,7 @@ struct ChaapComposeView: View {
                 )
             }
             .safeAreaPadding(.horizontal, 16)
+            .ignoresSafeArea(.keyboard, edges: .bottom)
         }
         .navigationBarBackButtonHidden(true)
         .alert("정말 삭제하시겠습니까?", isPresented: $showDeleteAlert) {
@@ -99,6 +101,7 @@ struct ChaapComposeView: View {
         .contentShape(Rectangle()) // 빈 영역도 터치 인식
         .onTapGesture {
             isFocused = false  // 포커스 해제 → 키보드 내려감
+            isMemoFocused = false
         }
     }
     
@@ -179,130 +182,46 @@ struct ChaapComposeView: View {
     var titleInputView: some View {
         /// 제목 입력
         ZStack(alignment: .center) {
-            if chaap.title.isEmpty {
+            if chaap.title.isEmpty && !isFocused {
                 Text("제목을 입력하세요")
                     .font(.chBodyRegular)
                     .lineHeight(1.4, fontSize: 18)
                     .foregroundStyle(Color.chLabelWhiteSecondary)
+                    .allowsHitTesting(false)
             }
             TextField("", text: $chaap.title)
                 .maxLength(text: $chaap.title, 15)
                 .font(.chBodyBold)
                 .lineHeight(1.4, fontSize: 18)
                 .foregroundStyle(Color.chLabelWhitePrimary)
-                .lineLimit(1)
-                .background(Color.clear)
-                .autocorrectionDisabled(true)
-                .textInputAutocapitalization(.never)
-                .disableAutocorrection(true)
                 .multilineTextAlignment(.center)
-                .tint(Color.chLabelWhitePrimary)
+                .background(Color.clear)
                 .focused($isFocused)
+                .onTapGesture { isFocused = true }
+                .tint(.chLabelWhitePrimary)
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 16)
-//        .frame(height: 57)
-        .background(
-            ZStack {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(hex: "#808080").opacity(0.25))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .inset(by: 0.46)
-                            .stroke(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [
-                                        Color.white.opacity(0),
-                                        Color.white.opacity(0.6 * 0.2)
-                                    ]),
-                                    startPoint: .center,
-                                    endPoint: .bottomTrailing
-                                ),
-                                lineWidth: 0.92
-                            )
-                            .stroke(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [
-                                        Color(hex: "#EEEEEE").opacity(0.8 * 0.2),
-                                        Color(hex: "#EEEEEE").opacity(0)
-                                    ]),
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                ),
-                                lineWidth: 0.92
-                            )
-                    )
-                
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(.shadow(.inner(color: .black, radius: 4, x: 1, y: 1.5)))
-                    .opacity(0.08)
-            })
+        .background( backgroundForInput )
     }
     
     var contextInputView: some View {
         /// 메모 입력
         ZStack(alignment: .center) {
-            if chaap.memo.isEmpty {
-                Text("내용을 입력하세요")
-                    .font(.chBodyRegular)
-                    .lineHeight(1.4, fontSize: 18)
-                    .foregroundStyle(Color.chLabelWhiteSecondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-            }
-            
-            TextEditor(text: $chaap.memo)
-                .maxLength(text: $chaap.memo, 70)
-                .font(.chBodyRegular)
-                .lineHeight(1.4, fontSize: 18)
-                .foregroundStyle(Color.chLabelWhitePrimary)
-                .scrollContentBackground(.hidden)
-                .scrollDisabled(true)
-                .background(Color.clear)
-                .autocorrectionDisabled(true)
-                .textInputAutocapitalization(.never)
-                .multilineTextAlignment(.center)
-                .tint(Color.chLabelWhitePrimary)
-                .focused($isFocused)
+            AutoGrowingTextEditor(
+                text: $chaap.memo,
+                placeholder: "내용을 입력하세요",
+                font: .chBodyRegular,
+                fontSize: 18
+            )
+            .frame(maxWidth: .infinity)
+            .focused($isMemoFocused)
+            .onTapGesture { isMemoFocused = true }
         }
         .padding(.horizontal, 15)
         .padding(.vertical, 1)
-        .frame(height: 136)
-        .background(
-            ZStack {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(hex: "#808080").opacity(0.25))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .inset(by: 0.46)
-                            .stroke(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [
-                                        Color.white.opacity(0),
-                                        Color.white.opacity(0.6 * 0.2)
-                                    ]),
-                                    startPoint: .center,
-                                    endPoint: .bottomTrailing
-                                ),
-                                lineWidth: 0.92
-                            )
-                            .stroke(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [
-                                        Color(hex: "#EEEEEE").opacity(0.8 * 0.2),
-                                        Color(hex: "#EEEEEE").opacity(0)
-                                    ]),
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                ),
-                                lineWidth: 0.92
-                            )
-                    )
-                
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(.shadow(.inner(color: .black, radius: 4, x: 1, y: 1.5)))
-                    .opacity(0.08)
-            }
-        )
+        .frame(height: 160)
+        .background( backgroundForInput )
     }
     
     var placeInputView: some View {
@@ -316,54 +235,55 @@ struct ChaapComposeView: View {
                     .font(.chPrimaryCaptionRegular)
                     .lineHeight(1.4, fontSize: 16)
                     .foregroundStyle(Color.chLabelWhiteSecondary)
-                    .lineLimit(1)
-                    .background(Color.clear)
-                    .autocorrectionDisabled(true)
-                    .textInputAutocapitalization(.never)
-                    .disableAutocorrection(true)
+
                     .multilineTextAlignment(.center)
-                    .tint(Color.chLabelWhitePrimary)
+                    .background(Color.clear)
                     .focused($isFocused)
+                    .onTapGesture { isFocused = true }
+                    .tint(.chLabelWhiteSecondary)
             }
             Spacer()
         }
         .padding(.vertical, 16)
         .padding(.horizontal, 14)
         .frame(height: 57)
-        .background(
-            ZStack {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(hex: "#808080").opacity(0.25))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .inset(by: 0.46)
-                            .stroke(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [
-                                        Color.white.opacity(0),
-                                        Color.white.opacity(0.6 * 0.2)
-                                    ]),
-                                    startPoint: .center,
-                                    endPoint: .bottomTrailing
-                                ),
-                                lineWidth: 0.92
-                            )
-                            .stroke(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [
-                                        Color(hex: "#EEEEEE").opacity(0.8 * 0.2),
-                                        Color(hex: "#EEEEEE").opacity(0)
-                                    ]),
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                ),
-                                lineWidth: 0.92
-                            )
-                    )
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(.shadow(.inner(color: .black, radius: 4, x: 1, y: 1.5)))
-                    .opacity(0.08)
-            })
+        .background( backgroundForInput )
+    }
+    
+    private var backgroundForInput: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color(hex: "#808080").opacity(0.25))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .inset(by: 0.46)
+                        .stroke(
+                            LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color.white.opacity(0),
+                                    Color.white.opacity(0.6 * 0.2)
+                                ]),
+                                startPoint: .center,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 0.92
+                        )
+                        .stroke(
+                            LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color(hex: "#EEEEEE").opacity(0.8 * 0.2),
+                                    Color(hex: "#EEEEEE").opacity(0)
+                                ]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            ),
+                            lineWidth: 0.92
+                        )
+                )
+            RoundedRectangle(cornerRadius: 12)
+                .fill(.shadow(.inner(color: .black, radius: 4, x: 1, y: 1.5)))
+                .opacity(0.08)
+        }
     }
     
     var photoInputView: some View {
@@ -372,11 +292,22 @@ struct ChaapComposeView: View {
                 ZStack {
                     Color.clear
                         .aspectRatio(1, contentMode: .fit)
-                    Image(uiImage: chaapImage)
-                        .resizable()
-                        .aspectRatio(1, contentMode: .fill)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .shadow(color: Color.chBlack.opacity(0.25), radius: 4, x: 0, y: 4)
+                    ZStack (alignment: .topTrailing) {
+                        Image(uiImage: chaapImage)
+                            .resizable()
+                            .aspectRatio(1, contentMode: .fill)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .shadow(color: Color.chBlack.opacity(0.25), radius: 4, x: 0, y: 4)
+                        if chaap.photoData != nil {
+                            Button {
+                                chaap.photoData = nil
+                            } label: {
+                                CHCircleButton(buttonImageName: "multiply", imageSize: 15, width: 28, height: 28)
+                            }
+                            .padding(.top, 8)
+                            .padding(.trailing, 8)
+                        }
+                    }
                 }
             } else {
                 Button { viewModel.openCameraTapped() } label: {
@@ -388,17 +319,6 @@ struct ChaapComposeView: View {
                         .contentShape(Rectangle())
                 }
             }
-            // TODO: 디자인 적용
-            if chaap.photoData != nil {
-                Button {
-                    viewModel.openCameraTapped()
-                } label: { Text("다시 촬영") }
-            }
-//            if chaap.photoData != nil {
-//                Button(role: .destructive) {
-//                    chaap.photoData = nil
-//                } label: { Text("사진 삭제") }
-//            }
         }
     }
     
