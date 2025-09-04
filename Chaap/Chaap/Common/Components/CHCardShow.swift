@@ -58,10 +58,12 @@ struct CHCardShow: View {
             // 상대 프로필 닉네임
             Text("with \(chaap.peers.first?.displayName ?? "이름 없음")")
                 .font(.chBodyBold)
+                .lineHeight(1.4, fontSize: 18)
                 .foregroundStyle(Color.chLabelWhitePrimary)
             
             Text(chaap.createdAt.formatted(date: .abbreviated, time: .shortened))
                 .font(.chPrimaryCaptionRegular)
+                .lineHeight(1.4, fontSize: 16)
                 .foregroundStyle(Color.chLabelWhiteSecondary)
         }
     }
@@ -72,11 +74,13 @@ struct CHCardShow: View {
             // 기록 제목
             Text(chaap.title)
                 .font(.chBodyBold)
+                .lineHeight(1.4, fontSize: 18)
                 .foregroundStyle(Color.chLabelWhitePrimary)
             
             // 기록 내용
             Text(chaap.memo)
                 .font(.chBodyRegular)
+                .lineHeight(1.4, fontSize: 18)
                 .foregroundStyle(Color.chLabelWhiteSecondary)
                 .multilineTextAlignment(.center)
                 .lineLimit(5)
@@ -93,6 +97,7 @@ struct CHCardShow: View {
             // 위치 정보
             Text(chaap.place)
                 .font(.chPrimaryCaptionRegular)
+                .lineHeight(1.4, fontSize: 16)
                 .foregroundStyle(Color.chLabelWhiteSecondary)
         }
     }
