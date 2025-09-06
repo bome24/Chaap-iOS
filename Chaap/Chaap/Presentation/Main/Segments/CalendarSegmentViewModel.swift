@@ -11,7 +11,7 @@ import SwiftData
 
 class CalendarSegmentViewModel: ObservableObject {
     // MARK: - Published Properties
-    @Published var selectedDate = Date()
+    @Published var selectedDate: Date? = nil
     @Published var currentMonth = Date()
     
     // MARK: - Private Properties
@@ -114,6 +114,7 @@ class CalendarSegmentViewModel: ObservableObject {
     
     /// 선택된 날짜의 이벤트 목록
     var eventsForSelectedDate: [Chaap] {
+        guard let selectedDate else { return [] }
         return chaapsForDate(selectedDate)
     }
     

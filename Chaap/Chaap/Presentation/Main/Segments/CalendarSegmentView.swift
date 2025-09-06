@@ -132,10 +132,9 @@ struct CalendarSegmentView: View {
     
     private func dayCell(date: Date) -> some View {
         let day = Calendar.current.component(.day, from: date)
-        let isSelected = Calendar.current.isDate(
-            date,
-            inSameDayAs: viewModel.selectedDate
-        )
+        let isSelected = viewModel.selectedDate.map {
+            Calendar.current.isDate(date, inSameDayAs: $0)
+        } ?? false
         let isToday = Calendar.current.isDateInToday(date)
         let isCurrentMonth = Calendar.current.isDate(
             date,
@@ -148,6 +147,7 @@ struct CalendarSegmentView: View {
         return Button {
             if hasEvents {
                 viewModel.dateWasSelected(date)
+                isModalPresented = !viewModel.eventsForSelectedDate.isEmpty
             }
         } label: {
             ZStack {
