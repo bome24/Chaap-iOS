@@ -195,30 +195,31 @@ class CalendarSegmentViewModel: ObservableObject {
         for date: Date,
         isSelected: Bool,
         isToday: Bool,
+        hasEvents: Bool,
         isCurrentMonth: Bool
     ) -> Color {
         // 선택된 날짜는 흰색
         if isSelected {
-            return .white
+            return Color.chLabelWhitePrimary
         }
         
         // 현재 월이 아닌 날짜는 회색 투명
         if !isCurrentMonth {
-            return Color(hex: "#919191").opacity(0.3)
+            return Color.chLabelBlackSecondary
         }
         
         // 오늘 날짜는 보라색
         if isToday {
-            return .chPointColorPurple
+            return Color.chPointColorPurple
         }
         
         // 이벤트가 있는 날짜는 흰색
-        if hasEvents(on: date) {
-            return .white
+        if hasEvents {
+            return Color.chLabelWhitePrimary
         }
         
         // 기본 색상은 회색
-        return Color(hex: "#919191")
+        return Color.chLabelBlackSecondary
     }
     
     /// 날짜 셀의 배경 색상 결정
@@ -227,14 +228,14 @@ class CalendarSegmentViewModel: ObservableObject {
         isToday: Bool
     ) -> Color {
         if isSelected {
-            return .black.opacity(0.6)
+            return Color.chBackgroundSecondary
         }
         
         if isToday {
-            return .clear
+            return Color.clear
         }
         
-        return .clear
+        return Color.clear
     }
     
     /// 월 탐색 가능 여부 확인
