@@ -98,7 +98,7 @@ struct CalendarSegmentView: View {
     
     private var calendarGrid: some View {
         let rowCount = Int(ceil(Double(viewModel.daysInMonth.count) / 7.0))
-
+        
         return VStack(alignment: .center, spacing: 5) {
             ForEach(0..<rowCount, id: \.self) { week in
                 HStack(alignment: .center, spacing: 0) {
@@ -117,6 +117,17 @@ struct CalendarSegmentView: View {
                 )
             }
         }
+        .contentShape(Rectangle())
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    if value.translation.width < -50 {
+                        viewModel.nextMonthWasTapped()
+                    } else if value.translation.width > 50 {
+                        viewModel.previousMonthWasTapped()
+                    }
+                }
+        )
     }
     
     private func dayCell(date: Date) -> some View {
