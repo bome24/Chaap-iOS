@@ -23,16 +23,18 @@ struct CalendarSegmentView: View {
 
     var body: some View {
        VStack {
-           VStack(spacing: 24) {
+           VStack(spacing: 16) {
                monthHeader
-               weekdayHeader
-               calendarGrid
+               VStack(spacing: 5) {
+                   weekdayHeader
+                   calendarGrid
+               }
            }
-           .padding(.vertical, 24)
+           .padding(.vertical, 32)
            .background(CHCardBG())
            Spacer()
         }
-        .safeAreaPadding(.horizontal, 24)
+        .safeAreaPadding(.horizontal, 16)
         .safeAreaPadding(.top, 144)
         .modifier(CHBottomModalModifier(
             isPresented: $isModalPresented,
@@ -83,49 +85,56 @@ struct CalendarSegmentView: View {
     }
     
     private var weekdayHeader: some View {
-        HStack(alignment: .center, spacing: -35) {
+        HStack(alignment: .center, spacing: 0) {
             ForEach(viewModel.weekdays, id: \.self) { weekday in
-                Spacer()
                 Text(weekday)
                     .font(.chPrimaryCaptionRegular)
-                    .lineHeight(1.4, fontSize: 16)
-                    .foregroundColor(Color.chLabelBlackSecondary)
-                Spacer()
+                    .foregroundColor(Color(hex: "#919191"))
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 16.5)
             }
         }
     }
     
     private var calendarGrid: some View {
         let rowCount = Int(ceil(Double(viewModel.daysInMonth.count) / 7.0))
-
-        return VStack(alignment: .center, spacing: 20) {
+        
+        return VStack(alignment: .center, spacing: 5) {
             ForEach(0..<rowCount, id: \.self) { week in
-                HStack(alignment: .center, spacing: -35) {
+                HStack(alignment: .center, spacing: 0) {
                     ForEach(0..<7, id: \.self) { day in
-                        Spacer()
                         let index = week * 7 + day
                         if index < viewModel.daysInMonth.count {
                             dayCell(date: viewModel.daysInMonth[index])
                         }
-                        Spacer()
                     }
                 }
                 .frame(
                     maxWidth: .infinity,
-                    minHeight: 36,
-                    maxHeight: 36,
+                    minHeight: 46.85,
+                    maxHeight: 46.85,
                     alignment: .center
                 )
             }
         }
+        .contentShape(Rectangle())
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    if value.translation.width < -50 {
+                        viewModel.nextMonthWasTapped()
+                    } else if value.translation.width > 50 {
+                        viewModel.previousMonthWasTapped()
+                    }
+                }
+        )
     }
     
     private func dayCell(date: Date) -> some View {
         let day = Calendar.current.component(.day, from: date)
-        let isSelected = Calendar.current.isDate(
-            date,
-            inSameDayAs: viewModel.selectedDate
-        )
+        let isSelected = viewModel.selectedDate.map {
+            Calendar.current.isDate(date, inSameDayAs: $0)
+        } ?? false
         let isToday = Calendar.current.isDateInToday(date)
         let isCurrentMonth = Calendar.current.isDate(
             date,
@@ -133,52 +142,56 @@ struct CalendarSegmentView: View {
             toGranularity: .month
         )
 
+        let hasEvents = viewModel.hasEvents(on: date)
+        
         return Button {
-            viewModel.dateWasSelected(date)
+            if hasEvents {
+                viewModel.dateWasSelected(date)
+                isModalPresented = !viewModel.eventsForSelectedDate.isEmpty
+            }
         } label: {
-            VStack(spacing: 0) {
-                ZStack {
-                    /// 선택 배경 원 (숫자 텍스트 중앙에 위치)
-                    Ellipse()
-                        .fill(viewModel.cellBackgroundColor(
-                            isSelected: isSelected,
-                            isToday: isToday
-                        ))
-                        .frame(width: 28, height: 27)
-
-                    Text("\(day)")
-                        .font(.chPrimaryCaptionRegular)
-                        .lineHeight(1.4, fontSize: 16)
-                        .foregroundColor(viewModel.cellTextColor(
-                            for: date,
-                            isSelected: isSelected,
-                            isToday: isToday,
-                            isCurrentMonth: isCurrentMonth
-                        ))
-                }
-
-                /// 오늘 날짜 표시 (선택되지 않았을 때만)
+            ZStack {
+                Ellipse()
+                    .fill(viewModel.cellBackgroundColor(
+                        isSelected: isSelected,
+                        isToday: isToday
+                    ))
+                    .frame(width: 37, height: 36)
+                    .padding(.vertical, 5.43)
+                    .padding(.horizontal, 4.93)
+                
+                Text("\(day)")
+                    .font(.chPrimaryCaptionRegular)
+                    .lineHeight(1.4, fontSize: 16)
+                    .foregroundColor(viewModel.cellTextColor(
+                        for: date,
+                        isSelected: isSelected,
+                        isToday: isToday,
+                        hasEvents: hasEvents,
+                        isCurrentMonth: isCurrentMonth
+                    ))
+                
                 if isToday && isCurrentMonth && !isSelected {
                     Text("오늘")
                         .font(.chSecondaryCaptionMedium)
-                        .lineHeight(11, fontSize: 1.4)
                         .foregroundColor(.chPointColorPurple)
-                } else {
-                    /// 빈 공간 유지
-                    Text("")
-                        .font(.chSecondaryCaptionMedium)
-                        .lineHeight(11, fontSize: 1.4)
+                        .padding(.top, 34)
+                        .padding(.bottom, 3)
                 }
             }
-            .frame(width: 35, height: 36)
         }
+        .disabled(!hasEvents)
     }
 
     private var chaapListModal: some View {
         VStack(spacing: 0) {
-            // 챱 목록
+            Capsule()
+                .frame(width: 40, height: 4)
+                .foregroundColor(.white)
+                .padding(.bottom, 12)
+            
             ScrollView {
-                VStack(spacing: 0) {
+                VStack(spacing: 12) {
                     ForEach(viewModel.eventsForSelectedDate, id: \.id) { chaap in
                         Button {
                             if chaap.isEditable {
@@ -188,28 +201,12 @@ struct CalendarSegmentView: View {
                             }
                         } label: {
                             PeerChaapRow(chaap: chaap)
-                                .padding(.horizontal, 4)
-                                .padding(.vertical, 12)
                         }
                     }
                 }
             }
+            .padding(.horizontal, 16)
             .scrollIndicators(.hidden)
         }
-    }
-}
-
-struct CalendarSegmentView_Previews: PreviewProvider {
-    static var previews: some View {
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try! ModelContainer(
-            for: Chaap.self,
-            Peer.self,
-            configurations: config
-        )
-        
-        CalendarSegmentView(modelContext: container.mainContext)
-            .background(Color.black)
-            .modelContainer(container)
     }
 }
