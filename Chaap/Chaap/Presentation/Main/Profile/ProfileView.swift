@@ -11,6 +11,7 @@ struct ProfileView: View {
     @Bindable var viewModel: UserProfileViewModel
     @State private var shouldNavigateToHome = false
     
+    @Binding var showOnboarding: Bool
     @State private var showImagePicker = false
     
     var body: some View {
@@ -77,6 +78,9 @@ struct ProfileView: View {
                 Button("다음") {
                     viewModel.saveProfile()
 //                    shouldNavigateToHome = true
+                    withAnimation {
+                        showOnboarding = true
+                    }
                 }
                 .font(.chPrimaryCaptionMedium)
                 .lineHeight(1.4, fontSize: 16)

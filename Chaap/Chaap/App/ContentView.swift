@@ -11,13 +11,16 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @AppStorage("displayName") private var displayName: String = ""
     
+    @State private var showOnboarding = false
     @State private var isSplashFinished = false
     @State private var userProfileViewModel = UserProfileViewModel()
     
     var body: some View {
         if isSplashFinished {
-            if displayName.isEmpty {
-                ProfileView(viewModel: userProfileViewModel)
+            if displayName.isEmpty && !showOnboarding  {
+                ProfileView(viewModel: userProfileViewModel, showOnboarding: $showOnboarding)
+            } else if !displayName.isEmpty && showOnboarding {
+                OnboardingView(showOnboarding: $showOnboarding)
             } else {
                 MainView(userProfileViewModel: userProfileViewModel)
             }
