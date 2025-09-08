@@ -56,3 +56,17 @@ struct CHNavBar: View {
         })
     }
 }
+
+extension UINavigationController: UIGestureRecognizerDelegate {
+    fileprivate static var isGestureDisabled: Bool = false
+    
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        navigationBar.isHidden = true
+        interactivePopGestureRecognizer?.delegate = self
+    }
+
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return viewControllers.count > 1 && !UINavigationController.isGestureDisabled
+    }
+}
